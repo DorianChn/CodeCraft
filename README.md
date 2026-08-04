@@ -4,6 +4,18 @@
 
 🔗 **在线访问**: https://dorianchn.github.io/CodeCraft/
 
+---
+
+## 📥 下载安装
+
+| 方式 | 链接 | 说明 |
+|------|------|------|
+| 💻 Windows 桌面版 | [下载 CodeCraft.exe](https://github.com/DorianChn/CodeCraft/releases/download/v1.0.1/CodeCraft.exe) | 双击即用，无需安装 |
+| 🌐 网页版 | https://dorianchn.github.io/CodeCraft/ | 浏览器直接打开 |
+| 📱 手机版 | 打开网页版 → 浏览器菜单 → 添加到主屏幕 | PWA 离线可用 |
+
+---
+
 ## 什么是 CodeCraft？
 
 CodeCraft 帮你解决"工具装好了，但不知道做什么"的问题。从 **好玩、好用、好搓（硬件）** 三个方向精选项目，每个项目都有：
@@ -27,6 +39,7 @@ CodeCraft 帮你解决"工具装好了，但不知道做什么"的问题。从 *
 
 - 纯 HTML + CSS + JavaScript（单文件，零依赖）
 - GitHub Pages 免费托管
+- PWA 支持（离线可用）
 - 零 API 调用，零费用，零维护
 
 ## 本地运行
