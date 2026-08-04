@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CodeCraft - 给 Vibe Coding 新手精选的 90 个开源项目灵感雷达">
+<meta name="keywords" content="Vibe Coding, AI编程, 开源项目, 新手入门, Codex, Claude Code">
+<meta property="og:title" content="CodeCraft - AI 项目灵感雷达">
+<meta property="og:description" content="90 个精选开源项目，帮你从零开始 Vibe Coding">
+<meta property="og:type" content="website">
 <title>CodeCraft - AI 项目灵感雷达</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -10,112 +15,158 @@
   --bg:#0a0a0f;--surface:#12121a;--card:#1a1a2e;--border:#2a2a3e;
   --text:#e0e0f0;--dim:#8888aa;--accent:#6c5ce7;--accent2:#00cec9;
   --play:#fd79a8;--use:#0984e3;--hw:#00b894;--star:#fdcb6e;
-  --radius:12px;
+  --radius:12px;--shadow:0 4px 24px rgba(0,0,0,.3);
 }
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6}
-a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.6;overflow-x:hidden}
+a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decoration:underline;color:#fff}
+
+/* ANIMATIONS */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.anim{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.anim.visible{opacity:1;transform:translateY(0)}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 0}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-.logo{font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:8px;flex-wrap:wrap}
-.nav-links a{padding:6px 14px;border-radius:20px;font-size:.85rem;color:var(--dim);transition:.2s}
-.nav-links a:hover,.nav-links a.active{color:#fff;background:var(--accent)}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(42,42,62,.5);padding:10px 0}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.logo{font-size:1.25rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap}
+.nav-links a{padding:6px 14px;border-radius:20px;font-size:.82rem;color:var(--dim);transition:.25s;font-weight:500}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:var(--accent);text-decoration:none}
 
 /* HERO */
-.hero{text-align:center;padding:80px 24px 40px;max-width:900px;margin:0 auto}
-.hero h1{font-size:2.8rem;font-weight:800;margin-bottom:16px;background:linear-gradient(135deg,var(--play),var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:var(--dim);font-size:1.1rem;max-width:600px;margin:0 auto 32px}
+.hero{text-align:center;padding:100px 24px 50px;max-width:900px;margin:0 auto;animation:fadeInUp .8s ease}
+.hero-badge{display:inline-block;padding:6px 18px;border-radius:20px;background:rgba(108,92,231,.15);color:var(--accent);font-size:.8rem;font-weight:600;margin-bottom:16px;border:1px solid rgba(108,92,231,.3)}
+.hero h1{font-size:3.2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--play),var(--accent),var(--accent2));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientShift 4s ease infinite;letter-spacing:-1px}
+.hero p{color:var(--dim);font-size:1.1rem;max-width:620px;margin:0 auto 36px;line-height:1.7}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:12px 28px;border-radius:24px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.25s;border:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#5b4bd5);color:#fff;box-shadow:0 4px 16px rgba(108,92,231,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(108,92,231,.5)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
 
 /* STATS */
-.stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
-.stat{text-align:center;padding:20px 28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
-.stat .num{font-size:2rem;font-weight:800;color:var(--accent2)}
-.stat .label{font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stats{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:50px;padding:0 24px}
+.stat{text-align:center;padding:20px 28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:120px;transition:.3s}
+.stat:hover{border-color:var(--accent);transform:translateY(-2px)}
+.stat .num{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat .label{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;font-weight:600}
+
+/* INTRO */
+.intro{max-width:800px;margin:0 auto 60px;padding:0 24px;text-align:center}
+.intro h2{font-size:1.5rem;font-weight:800;margin-bottom:12px}
+.intro p{color:var(--dim);font-size:.95rem;line-height:1.8}
+.intro-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:24px}
+.intro-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:.3s}
+.intro-step:hover{border-color:var(--accent);transform:translateY(-3px)}
+.intro-step .icon{font-size:2rem;margin-bottom:8px}
+.intro-step h3{font-size:.9rem;font-weight:700;margin-bottom:6px}
+.intro-step p{font-size:.8rem;color:var(--dim)}
 
 /* PICKER */
 .picker{max-width:1000px;margin:0 auto 60px;padding:0 24px}
-.picker-title{font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.picker-title{font-size:1.4rem;font-weight:800;margin-bottom:8px}
 .picker-desc{color:var(--dim);margin-bottom:24px;font-size:.9rem}
-.picker-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:24px}
-.picker-group{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-.picker-group h3{font-size:.85rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.bubble{display:inline-block;padding:8px 16px;border-radius:20px;border:1px solid var(--border);font-size:.85rem;margin:4px;cursor:pointer;transition:.2s;background:transparent;color:var(--text)}
-.bubble:hover{border-color:var(--accent);color:var(--accent)}
-.bubble.selected{background:var(--accent);border-color:var(--accent);color:#fff}
+.picker-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
+.picker-group{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:.3s}
+.picker-group:hover{border-color:rgba(108,92,231,.3)}
+.picker-group h3{font-size:.8rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-weight:700}
+.bubble{display:inline-block;padding:8px 16px;border-radius:20px;border:1px solid var(--border);font-size:.82rem;margin:4px;cursor:pointer;transition:.25s;background:transparent;color:var(--text);font-weight:500}
+.bubble:hover{border-color:var(--accent);color:var(--accent);background:rgba(108,92,231,.06)}
+.bubble.selected{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(108,92,231,.3)}
 
 /* RECOMMENDATIONS */
 .recs{max-width:1000px;margin:0 auto 60px;padding:0 24px}
-.recs-title{font-size:1.4rem;font-weight:700;margin-bottom:20px}
+.recs-title{font-size:1.4rem;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.recs-title span{animation:pulse 2s ease infinite}
 .rec-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.rec-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;transition:.2s}
-.rec-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.rec-rank{position:absolute;top:12px;right:16px;font-size:.75rem;color:var(--dim)}
-.rec-track{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.7rem;font-weight:600;margin-bottom:8px}
-.track-play{background:rgba(253,121,168,.15);color:var(--play)}
-.track-use{background:rgba(9,132,227,.15);color:var(--use)}
-.track-hw{background:rgba(0,184,148,.15);color:var(--hw)}
-.track-star{background:rgba(253,203,110,.15);color:var(--star)}
-.rec-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
-.rec-card p{font-size:.85rem;color:var(--dim);margin-bottom:12px;line-height:1.5}
+.rec-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;transition:.3s;overflow:hidden}
+.rec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:.3s}
+.rec-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:var(--shadow)}
+.rec-card:hover::before{opacity:1}
+.rec-rank{position:absolute;top:14px;right:16px;font-size:.72rem;color:var(--dim);font-weight:600}
+.rec-track{display:inline-block;padding:3px 12px;border-radius:10px;font-size:.7rem;font-weight:700;margin-bottom:10px;letter-spacing:.5px}
+.track-play{background:rgba(253,121,168,.12);color:var(--play)}
+.track-use{background:rgba(9,132,227,.12);color:var(--use)}
+.track-hw{background:rgba(0,184,148,.12);color:var(--hw)}
+.track-star{background:rgba(253,203,110,.12);color:var(--star)}
+.rec-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;line-height:1.4}
+.rec-card>p{font-size:.82rem;color:var(--dim);margin-bottom:12px;line-height:1.6}
 .rec-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.rec-tag{padding:3px 10px;border-radius:10px;font-size:.7rem;background:rgba(108,92,231,.12);color:var(--accent)}
-.rec-score{font-size:.8rem;color:var(--accent2);font-weight:600;margin-bottom:12px}
+.rec-tag{padding:3px 10px;border-radius:10px;font-size:.68rem;background:rgba(108,92,231,.1);color:var(--accent);font-weight:500}
+.rec-score{font-size:.78rem;color:var(--accent2);font-weight:700;margin-bottom:14px}
 .rec-actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn-sm{padding:6px 14px;border-radius:16px;font-size:.75rem;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;transition:.2s}
-.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
-
-/* BOARD */
-.board{max-width:1200px;margin:0 auto 60px;padding:0 24px}
-.board-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
-.board-header h2{font-size:1.6rem;font-weight:800}
-.board-tabs{display:flex;gap:8px;flex-wrap:wrap}
-.board-tab{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;font-size:.85rem;transition:.2s}
-.board-tab:hover{border-color:var(--accent);color:var(--text)}
-.board-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.board-search{margin-left:auto;padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;width:200px;outline:none}
-.board-search:focus{border-color:var(--accent)}
-.board-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
-.proj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:.2s}
-.proj-card:hover{border-color:var(--accent)}
-.proj-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.proj-num{font-size:.75rem;color:var(--dim);min-width:28px}
-.proj-card h3{font-size:.95rem;font-weight:700;flex:1}
-.proj-card>p{font-size:.82rem;color:var(--dim);margin-bottom:10px;line-height:1.5}
-.proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.proj-tag{padding:3px 10px;border-radius:10px;font-size:.7rem;background:rgba(108,92,231,.12);color:var(--accent)}
-.proj-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.proj-score{font-size:.8rem;font-weight:700}
-.proj-links{display:flex;gap:6px}
-.proj-link{padding:5px 12px;border-radius:14px;font-size:.72rem;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;transition:.2s}
-.proj-link:hover{border-color:var(--accent2);color:var(--accent2)}
+.btn-sm{padding:7px 14px;border-radius:16px;font-size:.73rem;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;transition:.25s;font-weight:500;display:inline-flex;align-items:center;gap:4px}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent);background:rgba(108,92,231,.06)}
 
 /* STARS */
 .stars-section{max-width:1200px;margin:0 auto 60px;padding:0 24px}
 .stars-header{margin-bottom:24px}
 .stars-header h2{font-size:1.6rem;font-weight:800;margin-bottom:4px}
-.stars-header p{color:var(--dim);font-size:.9rem}
+.stars-header p{color:var(--dim);font-size:.88rem}
 .stars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.star-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:.2s}
-.star-card:hover{border-color:var(--star)}
-.star-rank{font-size:.75rem;color:var(--star);font-weight:700;margin-bottom:6px}
-.star-card h3{font-size:.9rem;font-weight:700;margin-bottom:4px}
-.star-card p{font-size:.82rem;color:var(--dim);margin-bottom:8px;line-height:1.4}
-.star-meta{display:flex;gap:10px;font-size:.75rem;color:var(--accent2)}
+.star-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:.3s}
+.star-card:hover{border-color:var(--star);transform:translateY(-3px);box-shadow:var(--shadow)}
+.star-rank{font-size:.75rem;color:var(--star);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.star-card h3{font-size:.9rem;font-weight:700;margin-bottom:6px;word-break:break-all}
+.star-card>p{font-size:.82rem;color:var(--dim);margin-bottom:10px;line-height:1.5}
+.star-meta{display:flex;gap:10px;font-size:.73rem;color:var(--accent2);font-weight:600}
+
+/* BOARD */
+.board{max-width:1200px;margin:0 auto 60px;padding:0 24px}
+.board-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.board-header h2{font-size:1.6rem;font-weight:800}
+.board-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.board-tab{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;font-size:.82rem;transition:.25s;font-weight:500}
+.board-tab:hover{border-color:var(--accent);color:var(--text)}
+.board-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.board-search{margin-left:auto;padding:10px 18px;border-radius:24px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;width:220px;outline:none;transition:.25s}
+.board-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,92,231,.15)}
+.board-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:.3s}
+.proj-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.proj-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.proj-num{font-size:.72rem;color:var(--dim);min-width:28px;font-weight:600}
+.proj-card h3{font-size:.92rem;font-weight:700;flex:1}
+.proj-card>p{font-size:.8rem;color:var(--dim);margin-bottom:10px;line-height:1.6}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.proj-tag{padding:3px 10px;border-radius:10px;font-size:.68rem;background:rgba(108,92,231,.1);color:var(--accent);font-weight:500}
+.proj-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.proj-score{font-size:.78rem;font-weight:700;color:var(--accent2)}
+.proj-links{display:flex;gap:6px}
+.proj-link{padding:6px 14px;border-radius:14px;font-size:.72rem;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;transition:.25s;font-weight:500}
+.proj-link:hover{border-color:var(--accent2);color:var(--accent2)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 24px;color:var(--dim)}
+.empty .icon{font-size:3rem;margin-bottom:12px}
+.empty p{font-size:.9rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--accent);color:#fff;padding:12px 24px;border-radius:24px;font-size:.85rem;font-weight:600;z-index:1000;transition:.4s;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* FOOTER */
-.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--border);color:var(--dim);font-size:.8rem}
-.footer a{color:var(--accent2)}
+.footer{text-align:center;padding:48px 24px;border-top:1px solid var(--border);color:var(--dim);font-size:.78rem}
+.footer a{color:var(--accent2);font-weight:600}
 
 /* RESPONSIVE */
 @media(max-width:640px){
-  .hero h1{font-size:1.8rem}
-  .stats{gap:12px}
-  .stat{padding:12px 16px}
-  .stat .num{font-size:1.4rem}
+  .hero h1{font-size:2rem}
+  .hero p{font-size:.95rem}
+  .stats{gap:10px}
+  .stat{padding:14px 16px;min-width:100px}
+  .stat .num{font-size:1.5rem}
   .board-grid,.rec-cards,.stars-grid{grid-template-columns:1fr}
-  .board-search{width:100%;margin-left:0;margin-top:12px}
+  .board-search{width:100%;margin-left:0;margin-top:8px}
+  .board-header{flex-direction:column;align-items:flex-start}
+  .picker-groups{grid-template-columns:1fr}
+  .nav-inner{gap:12px}
 }
 </style>
 </head>
@@ -126,158 +177,195 @@ a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
   <div class="nav-inner">
     <div class="logo">⚡ CodeCraft</div>
     <div class="nav-links">
-      <a href="#picker" class="active">适合我的</a>
-      <a href="#board">全部项目</a>
-      <a href="#stars">明星项目</a>
+      <a href="#intro">介绍</a>
+      <a href="#picker" class="active">推荐</a>
+      <a href="#stars">明星</a>
+      <a href="#board">全部</a>
     </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-badge">🚀 90 个精选开源项目</div>
   <h1>CodeCraft</h1>
-  <p>给刚开始玩 AI 编程的新手，精选最好玩、最好用、最好上手的开源项目。选一下你的情况，马上开工！</p>
+  <p>工具装好了，不知道做什么？CodeCraft 从好玩、好用、好搓三个方向，帮你找到最适合开工的 Vibe Coding 项目。</p>
+  <div class="hero-btns">
+    <a class="btn btn-primary" href="#picker">🎯 找适合我的项目</a>
+    <a class="btn btn-outline" href="#board">📋 浏览全部项目</a>
+  </div>
 </section>
 
 <!-- STATS -->
-<div class="stats" id="stats"></div>
+<div class="stats anim" id="stats"></div>
+
+<!-- INTRO -->
+<section class="intro anim" id="intro">
+  <h2>🎯 什么是 Vibe Coding？</h2>
+  <p>用自然语言告诉 AI 你想要什么，AI 帮你写代码。你负责创意和描述，AI 负责实现。不需要精通语法，不需要背 API，跟着感觉走就行。</p>
+  <div class="intro-steps">
+    <div class="intro-step">
+      <div class="icon">💡</div>
+      <h3>1. 想一个点子</h3>
+      <p>从下面的项目里挑一个感兴趣的</p>
+    </div>
+    <div class="intro-step">
+      <div class="icon">📋</div>
+      <h3>2. 复制开工提示词</h3>
+      <p>一键复制，粘贴到 AI 编程工具</p>
+    </div>
+    <div class="intro-step">
+      <div class="icon">🔨</div>
+      <h3>3. 开始做</h3>
+      <p>跟着 AI 的节奏，边做边学</p>
+    </div>
+    <div class="intro-step">
+      <div class="icon">🎉</div>
+      <h3>4. 完成分享</h3>
+      <p>做出作品，发给朋友看</p>
+    </div>
+  </div>
+</section>
 
 <!-- PICKER -->
-<section class="picker" id="picker">
+<section class="picker anim" id="picker">
   <div class="picker-title">🎯 先挑 3 个最适合你的项目</div>
   <div class="picker-desc">选一下你的时间、目标和形式，CodeCraft 会推荐最适合你开工的项目。</div>
   <div class="picker-groups" id="pickerGroups"></div>
-  <div class="recs" id="recs" style="padding:0;margin:0"></div>
+  <div id="recs"></div>
 </section>
 
 <!-- STARS -->
-<section class="stars-section" id="stars">
+<section class="stars-section anim" id="stars">
   <div class="stars-header">
     <h2>⭐ 明星项目</h2>
-    <p>本周 GitHub 增长最快的开源项目</p>
+    <p>本周 GitHub 增长最快的开源项目，追踪社区热点</p>
   </div>
   <div class="stars-grid" id="starsGrid"></div>
 </section>
 
 <!-- BOARD -->
-<section class="board" id="board">
+<section class="board anim" id="board">
   <div class="board-header">
     <h2>📋 全部项目</h2>
     <div class="board-tabs" id="boardTabs"></div>
-    <input class="board-search" id="boardSearch" placeholder="搜索项目..." />
+    <input class="board-search" id="boardSearch" placeholder="🔍 搜索项目名、标签..." />
   </div>
   <div class="board-grid" id="boardGrid"></div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p>CodeCraft · AI 项目灵感雷达 · 每周五更新</p>
-  <p style="margin-top:8px">Made with ❤️ by <a href="https://github.com/DorianChn" target="_blank">山川志</a></p>
+  <p>CodeCraft · AI 项目灵感雷达 · 纯静态 · 零费用 · 零维护</p>
+  <p style="margin-top:8px">Made with ❤️ by <a href="https://github.com/DorianChn" target="_blank">山川志</a> · <a href="https://github.com/DorianChn/CodeCraft" target="_blank">GitHub</a></p>
 </footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
 // ============ DATA ============
 const PROJECTS = [
   // 好玩 PLAY (30)
-  {id:1,track:"play",name:"AI 小镇 / NPC 社交游戏",desc:"让多个 AI 角色在一个小地图上自主社交、记忆、产生剧情。",tags:["AI 角色实验","角色记忆","小地图剧情"],score:95,mvp:"1-2天",source:"https://github.com/joonspk-research/generative_agents",demo:"https://ai-town.vercel.app"},
-  {id:2,track:"play",name:"手势控制小游戏",desc:"用摄像头识别手势来控制游戏，体感互动，展示效果拉满。",tags:["摄像头手势","体感控制","音效反馈"],score:92,mvp:"1天",source:"https://github.com/niconielsen32/YOLOHandTracking",demo:""},
-  {id:3,track:"play",name:"节点式视觉实验室",desc:"拖拽节点连接参数，实时生成视觉效果，像 Blender 的节点编辑器。",tags:["节点编排","参数画布","导出海报"],score:90,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:4,track:"play",name:"浏览器迷你音频工作站",desc:"在浏览器里剪辑音频、变声、采样，不需要装任何软件。",tags:["波形剪辑","变声采样","本地导出"],score:88,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://audiomass.co"},
-  {id:5,track:"play",name:"物理沙盒 / 像素炼金术",desc:"模拟水、火、沙等材料的物理反应，像素风沙盒，规则涌现。",tags:["像素沙盒","材料反应","规则涌现"],score:87,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://sandspiel.club"},
-  {id:6,track:"play",name:"浏览器视觉合成器",desc:"实时生成迷幻视觉效果，配合音乐节奏变形，适合做直播背景。",tags:["实时视觉","代码演出","节奏变形"],score:86,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://hydra.ojack.xyz"},
-  {id:7,track:"play",name:"生成式海报工厂",desc:"输入参数自动生成艺术海报，支持随机种子和 PNG 导出。",tags:["参数海报","随机种子","PNG 导出"],score:85,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:8,track:"play",name:"多人涂鸦白板",desc:"实时多人协作的在线白板，WebSocket 同步，适合演示全栈。",tags:["实时协作","WebSocket","画板"],score:84,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://excalidraw.com"},
-  {id:9,track:"play",name:"3D 唐诗星系",desc:"每颗星星是一首唐诗，点击展开，用 Three.js 做沉浸式阅读。",tags:["Three.js","唐诗","3D 可视化"],score:83,mvp:"2天",source:"",demo:""},
-  {id:10,track:"play",name:"像素风复古 iPod",desc:"复古 iPod 界面 + 网易云音乐 API，可以播放真实歌曲。",tags:["复古 UI","音乐播放","像素风"],score:82,mvp:"1天",source:"",demo:""},
-  {id:11,track:"play",name:"AI 表情包生成器",desc:"输入文字生成表情包，支持自定义模板，一键分享。",tags:["表情包","AI 生图","社交分享"],score:81,mvp:"半天",source:"",demo:""},
-  {id:12,track:"play",name:"像素画编辑器",desc:"浏览器里的像素画工具，支持图层、动画帧、导出 GIF。",tags:["像素画","动画帧","GIF 导出"],score:80,mvp:"2天",source:"",demo:""},
-  {id:13,track:"play",name:"AI 猜画小歌",desc:"你画 AI 猜，实时识别涂鸦内容，类似 Google Quick Draw。",tags:["涂鸦识别","AI 猜测","实时反馈"],score:79,mvp:"1天",source:"",demo:""},
-  {id:14,track:"play",name:"MIDI 音乐可视化",desc:"播放 MIDI 文件时同步生成粒子动画，视觉和听觉联动。",tags:["MIDI","粒子动画","音乐可视化"],score:78,mvp:"1-2天",source:"",demo:""},
-  {id:15,track:"play",name:"贪吃蛇 AI 对战",desc:"经典贪吃蛇 + AI 自动寻路，人机对战，展示算法之美。",tags:["贪吃蛇","AI 算法","对战模式"],score:77,mvp:"半天",source:"",demo:""},
-  {id:16,track:"play",name:"赛博朋克时钟",desc:"霓虹风格的实时时钟，支持多种主题和动画效果。",tags:["赛博朋克","实时时钟","CSS 动画"],score:76,mvp:"半天",source:"",demo:""},
-  {id:17,track:"play",name:"烟花模拟器",desc:"点击屏幕放烟花，物理模拟粒子轨迹，适合节日分享。",tags:["粒子系统","物理模拟","交互效果"],score:75,mvp:"1天",source:"",demo:""},
-  {id:18,track:"play",name:"AI 故事生成器",desc:"输入开头，AI 续写故事，支持分支选择，生成互动小说。",tags:["AI 文本","互动小说","分支剧情"],score:74,mvp:"1天",source:"",demo:""},
-  {id:19,track:"play",name:"实时弹幕系统",desc:"视频弹幕 + WebSocket 实时同步，支持颜色和滚动方向。",tags:["弹幕","WebSocket","实时同步"],score:73,mvp:"1天",source:"",demo:""},
-  {id:20,track:"play",name:"迷宫生成与求解",desc:"算法自动生成迷宫，支持 A*、BFS 等多种求解动画。",tags:["迷宫生成","路径算法","动画展示"],score:72,mvp:"1天",source:"",demo:""},
-  {id:21,track:"play",name:"AI 配色方案生成",desc:"描述风格，AI 生成和谐配色方案，导出 CSS 变量。",tags:["AI 配色","CSS 变量","设计工具"],score:71,mvp:"半天",source:"",demo:""},
-  {id:22,track:"play",name:"打字速度挑战",desc:"实时打字测速，支持中文，排行榜功能，适合多人竞技。",tags:["打字测速","排行榜","中文支持"],score:70,mvp:"1天",source:"",demo:""},
-  {id:23,track:"play",name:"天气粒子动画",desc:"根据实时天气数据生成对应的粒子动画效果（雨、雪、晴）。",tags:["天气 API","粒子动画","实时数据"],score:69,mvp:"1天",source:"",demo:""},
-  {id:24,track:"play",name:"AI 人脸融合",desc:"上传两张照片，AI 融合成一张新面孔，社交裂变神器。",tags:["人脸融合","AI 图像","社交分享"],score:68,mvp:"1-2天",source:"",demo:""},
-  {id:25,track:"play",name:"像素鸟 AI 训练",desc:"看着 AI 自己学会玩像素鸟，强化学习可视化。",tags:["强化学习","游戏 AI","可视化训练"],score:67,mvp:"1-2天",source:"",demo:""},
-  {id:26,track:"play",name:"音乐节奏游戏",desc:"自动生成谱面的音游，支持自定义音乐，浏览器直接玩。",tags:["音游","谱面生成","自定义音乐"],score:66,mvp:"2-3天",source:"",demo:""},
-  {id:27,track:"play",name:"AI 宠物养成",desc:"养一只 AI 宠物，它会学习你的习惯，做出不同反应。",tags:["AI 宠物","习惯学习","互动养成"],score:65,mvp:"2天",source:"",demo:""},
-  {id:28,track:"play",name:"全息投影效果",desc:"CSS 实现的全息投影视觉效果，科幻感拉满。",tags:["全息效果","CSS 3D","科幻风格"],score:64,mvp:"半天",source:"",demo:""},
-  {id:29,track:"play",name:"实时聊天室",desc:"匿名聊天室 + 表情包 + 在线人数，WebSocket 全栈项目。",tags:["匿名聊天","WebSocket","全栈"],score:63,mvp:"1天",source:"",demo:""},
-  {id:30,track:"play",name:"AI 绘本生成器",desc:"输入故事主题，AI 生成图文并茂的儿童绘本 PDF。",tags:["AI 绘本","图文生成","PDF 导出"],score:62,mvp:"1-2天",source:"",demo:""},
+  {id:1,track:"play",name:"AI 小镇 / NPC 社交游戏",desc:"让多个 AI 角色在一个小地图上自主社交、记忆、产生剧情。经典入门项目，展示效果拉满。",tags:["AI 角色","角色记忆","小地图"],score:95,mvp:"1-2天",source:"https://github.com/joonspk-research/generative_agents",demo:"https://ai-town.vercel.app"},
+  {id:2,track:"play",name:"手势控制小游戏",desc:"用摄像头识别手势来控制游戏，体感互动，适合演示。",tags:["摄像头","体感控制","音效"],score:92,mvp:"1天",source:"https://github.com/niconielsen32/Computer-Vision",demo:""},
+  {id:3,track:"play",name:"节点式视觉实验室",desc:"拖拽节点连接参数，实时生成视觉效果，像 Blender 的节点编辑器。",tags:["节点编排","参数画布","海报"],score:90,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:4,track:"play",name:"浏览器迷你音频工作站",desc:"在浏览器里剪辑音频、变声、采样，不需要装软件。",tags:["波形剪辑","变声","导出"],score:88,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://audiomass.co"},
+  {id:5,track:"play",name:"物理沙盒 / 像素炼金术",desc:"模拟水、火、沙等材料的物理反应，像素风沙盒。",tags:["像素沙盒","材料反应","涌现"],score:87,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://sandspiel.club"},
+  {id:6,track:"play",name:"浏览器视觉合成器",desc:"实时生成迷幻视觉效果，配合音乐节奏变形，适合直播背景。",tags:["实时视觉","代码演出","节奏"],score:86,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://hydra.ojack.xyz"},
+  {id:7,track:"play",name:"生成式海报工厂",desc:"输入参数自动生成艺术海报，支持随机种子和 PNG 导出。",tags:["参数海报","随机种子","PNG"],score:85,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:8,track:"play",name:"多人涂鸦白板",desc:"实时多人协作在线白板，WebSocket 同步，适合演示全栈。",tags:["实时协作","WebSocket","画板"],score:84,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://excalidraw.com"},
+  {id:9,track:"play",name:"3D 唐诗星系",desc:"每颗星星是一首唐诗，点击展开，用 Three.js 做沉浸式阅读。",tags:["Three.js","唐诗","3D"],score:83,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:10,track:"play",name:"像素风复古 iPod",desc:"复古 iPod 界面 + 音乐 API，可以播放真实歌曲。",tags:["复古 UI","音乐","像素风"],score:82,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:11,track:"play",name:"AI 表情包生成器",desc:"输入文字生成表情包，支持自定义模板，一键分享。",tags:["表情包","AI 生图","社交"],score:81,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:12,track:"play",name:"像素画编辑器",desc:"浏览器里的像素画工具，支持图层、动画帧、导出 GIF。",tags:["像素画","动画帧","GIF"],score:80,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:13,track:"play",name:"AI 猜画小歌",desc:"你画 AI 猜，实时识别涂鸦内容，类似 Google Quick Draw。",tags:["涂鸦识别","AI 猜测","实时"],score:79,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:14,track:"play",name:"MIDI 音乐可视化",desc:"播放 MIDI 文件时同步生成粒子动画，视觉听觉联动。",tags:["MIDI","粒子","可视化"],score:78,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:15,track:"play",name:"贪吃蛇 AI 对战",desc:"经典贪吃蛇 + AI 自动寻路，人机对战，展示算法之美。",tags:["贪吃蛇","AI 算法","对战"],score:77,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:16,track:"play",name:"赛博朋克时钟",desc:"霓虹风格实时时钟，支持多种主题和动画效果。",tags:["赛博朋克","时钟","CSS 动画"],score:76,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:17,track:"play",name:"烟花模拟器",desc:"点击屏幕放烟花，物理模拟粒子轨迹，适合节日分享。",tags:["粒子系统","物理","交互"],score:75,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:18,track:"play",name:"AI 故事生成器",desc:"输入开头，AI 续写故事，支持分支选择，生成互动小说。",tags:["AI 文本","互动小说","分支"],score:74,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:19,track:"play",name:"实时弹幕系统",desc:"视频弹幕 + WebSocket 实时同步，支持颜色和滚动方向。",tags:["弹幕","WebSocket","实时"],score:73,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:20,track:"play",name:"迷宫生成与求解",desc:"算法自动生成迷宫，支持 A*、BFS 等多种求解动画。",tags:["迷宫","路径算法","动画"],score:72,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:21,track:"play",name:"AI 配色方案生成",desc:"描述风格，AI 生成和谐配色方案，导出 CSS 变量。",tags:["AI 配色","CSS","设计"],score:71,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:22,track:"play",name:"打字速度挑战",desc:"实时打字测速，支持中文，排行榜功能，适合多人竞技。",tags:["打字测速","排行榜","中文"],score:70,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:23,track:"play",name:"天气粒子动画",desc:"根据实时天气数据生成对应粒子动画效果（雨、雪、晴）。",tags:["天气 API","粒子","实时"],score:69,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:24,track:"play",name:"AI 人脸融合",desc:"上传两张照片，AI 融合成一张新面孔，社交裂变神器。",tags:["人脸融合","AI 图像","社交"],score:68,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:25,track:"play",name:"像素鸟 AI 训练",desc:"看着 AI 自己学会玩像素鸟，强化学习可视化。",tags:["强化学习","游戏 AI","可视化"],score:67,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:26,track:"play",name:"音乐节奏游戏",desc:"自动生成谱面的音游，支持自定义音乐，浏览器直接玩。",tags:["音游","谱面生成","音乐"],score:66,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:27,track:"play",name:"AI 宠物养成",desc:"养一只 AI 宠物，它会学习你的习惯，做出不同反应。",tags:["AI 宠物","习惯学习","养成"],score:65,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:28,track:"play",name:"全息投影效果",desc:"CSS 实现的全息投影视觉效果，科幻感拉满。",tags:["全息效果","CSS 3D","科幻"],score:64,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:29,track:"play",name:"实时聊天室",desc:"匿名聊天室 + 表情包 + 在线人数，WebSocket 全栈项目。",tags:["匿名聊天","WebSocket","全栈"],score:63,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:30,track:"play",name:"AI 绘本生成器",desc:"输入故事主题，AI 生成图文并茂的儿童绘本 PDF。",tags:["AI 绘本","图文","PDF"],score:62,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
 
   // 好用 UTILITY (30)
   {id:31,track:"use",name:"收藏夹 + AI 阅读收件箱",desc:"保存链接自动抓取正文，AI 生成摘要和标签，替代 Pocket。",tags:["链接归档","正文抓取","AI 标签"],score:96,mvp:"2天",source:"https://github.com/linkwarden/linkwarden",demo:""},
-  {id:32,track:"use",name:"个人记账 + AI 分析",desc:"记账本 + AI 消费分析，自动分类、月度报告、预算提醒。",tags:["记账","AI 分析","预算提醒"],score:94,mvp:"2天",source:"",demo:""},
-  {id:33,track:"use",name:"AI 简历生成器",desc:"输入经历，AI 排版生成专业简历，支持多种模板导出 PDF。",tags:["简历","AI 排版","PDF 导出"],score:93,mvp:"1天",source:"",demo:""},
-  {id:34,track:"use",name:"Markdown 笔记 + AI 总结",desc:"所见即所得的 Markdown 编辑器，AI 帮你总结和提炼要点。",tags:["Markdown","AI 总结","笔记管理"],score:92,mvp:"2天",source:"",demo:""},
-  {id:35,track:"use",name:"番茄钟 + 专注统计",desc:"番茄工作法 + 专注时间统计 + 白噪音，帮你养成专注习惯。",tags:["番茄钟","专注统计","白噪音"],score:91,mvp:"1天",source:"",demo:""},
-  {id:36,track:"use",name:"AI 翻译 + 术语表",desc:"支持专业领域术语表的翻译工具，比 Google 翻译更精准。",tags:["AI 翻译","术语表","专业领域"],score:90,mvp:"1-2天",source:"",demo:""},
-  {id:37,track:"use",name:"密码管理器",desc:"本地加密的密码管理器，支持生成强密码和自动填充。",tags:["密码管理","本地加密","安全存储"],score:89,mvp:"2-3天",source:"",demo:""},
-  {id:38,track:"use",name:"AI 邮件助手",desc:"帮你写邮件、总结收件箱、自动分类，邮箱效率翻倍。",tags:["AI 邮件","收件箱","自动分类"],score:88,mvp:"2天",source:"",demo:""},
-  {id:39,track:"use",name:"文件批量重命名",desc:"拖拽文件，用正则或 AI 模式批量重命名，支持预览。",tags:["批量重命名","正则","拖拽上传"],score:87,mvp:"半天",source:"",demo:""},
-  {id:40,track:"use",name:"二维码工具箱",desc:"批量生成、识别、美化二维码，支持 Logo 嵌入和自定义样式。",tags:["二维码","批量生成","美化"],score:86,mvp:"半天",source:"",demo:""},
-  {id:41,track:"use",name:"AI 日程管理",desc:"自然语言输入日程，AI 自动解析时间和重复规则。",tags:["日程管理","自然语言","AI 解析"],score:85,mvp:"1-2天",source:"",demo:""},
-  {id:42,track:"use",name:"知识库搜索",desc:"本地文档向量化，支持语义搜索，替代 Ctrl+F。",tags:["向量搜索","本地文档","语义检索"],score:84,mvp:"2天",source:"",demo:""},
-  {id:43,track:"use",name:"AI 代码审查助手",desc:"提交代码自动审查，指出潜在问题和优化建议。",tags:["代码审查","AI 分析","自动化"],score:83,mvp:"2天",source:"",demo:""},
-  {id:44,track:"use",name:"网页截图 + 标注",desc:"输入 URL 自动截图，支持标注、箭头、文字叠加。",tags:["截图","标注","URL 截取"],score:82,mvp:"1天",source:"",demo:""},
-  {id:45,track:"use",name:"API 文档生成器",desc:"从代码注释自动生成漂亮的 API 文档，支持 OpenAPI。",tags:["API 文档","自动生成","OpenAPI"],score:81,mvp:"1-2天",source:"",demo:""},
-  {id:46,track:"use",name:"CSV 数据可视化",desc:"拖入 CSV 自动生成图表，支持折线、柱状、饼图等。",tags:["CSV","数据可视化","拖拽上传"],score:80,mvp:"1天",source:"",demo:""},
-  {id:47,track:"use",name:"正则表达式测试器",desc:"实时测试正则，高亮匹配结果，内置常用正则模板。",tags:["正则测试","实时匹配","模板库"],score:79,mvp:"半天",source:"",demo:""},
-  {id:48,track:"use",name:"AI 会议纪要",desc:"上传录音，AI 自动生成会议纪要、待办事项和摘要。",tags:["会议纪要","语音转文字","AI 摘要"],score:78,mvp:"2天",source:"",demo:""},
-  {id:49,track:"use",name:"待办清单 + AI 排优先级",desc:"智能待办，AI 根据截止时间和重要性自动排序。",tags:["待办清单","AI 排序","优先级"],score:77,mvp:"1天",source:"",demo:""},
-  {id:50,track:"use",name:"网页剪藏器",desc:"一键保存网页内容到本地，支持全文离线阅读。",tags:["网页剪藏","离线阅读","全文保存"],score:76,mvp:"1天",source:"",demo:""},
-  {id:51,track:"use",name:"JSON 格式化工具",desc:"在线 JSON 格式化、压缩、对比、转换，开发者必备。",tags:["JSON","格式化","对比工具"],score:75,mvp:"半天",source:"",demo:""},
-  {id:52,track:"use",name:"AI 配置文件助手",desc:"自然语言描述需求，AI 生成 Nginx/Docker/Nginx 等配置。",tags:["配置生成","AI 助手","运维"],score:74,mvp:"1天",source:"",demo:""},
-  {id:53,track:"use",name:"团队投票工具",desc:"创建投票、分享链接、实时计数，适合小团队快速决策。",tags:["投票","实时计数","分享链接"],score:73,mvp:"1天",source:"",demo:""},
-  {id:54,track:"use",name:"Git 提交分析",desc:"可视化 Git 提交历史，分析谁写了多少代码、热点文件。",tags:["Git 分析","可视化","代码统计"],score:72,mvp:"1天",source:"",demo:""},
-  {id:55,track:"use",name:"AI 写作润色",desc:"粘贴文章，AI 润色语法、优化表达、调整语气风格。",tags:["AI 润色","语法检查","风格调整"],score:71,mvp:"1天",source:"",demo:""},
-  {id:56,track:"use",name:"图片压缩工具",desc:"批量压缩图片，支持 WebP/AVIF 转换，拖拽上传。",tags:["图片压缩","批量处理","格式转换"],score:70,mvp:"半天",source:"",demo:""},
-  {id:57,track:"use",name:"在线 Markdown 预览",desc:"实时预览 Markdown，支持导出 HTML/PDF，暗黑模式。",tags:["Markdown","实时预览","导出"],score:69,mvp:"半天",source:"",demo:""},
-  {id:58,track:"use",name:"环境变量管理",desc:"可视化管理 .env 文件，支持多环境切换和加密存储。",tags:["环境变量","多环境","加密存储"],score:68,mvp:"1天",source:"",demo:""},
-  {id:59,track:"use",name:"AI 代码解释器",desc:"粘贴代码，AI 逐行解释，支持多种编程语言。",tags:["代码解释","AI 分析","多语言"],score:67,mvp:"1天",source:"",demo:""},
-  {id:60,track:"use",name:"个人主页生成器",desc:"输入信息自动生成漂亮的个人主页，支持自定义主题。",tags:["个人主页","模板","自动生成"],score:66,mvp:"1天",source:"",demo:""},
+  {id:32,track:"use",name:"个人记账 + AI 分析",desc:"记账本 + AI 消费分析，自动分类、月度报告、预算提醒。",tags:["记账","AI 分析","预算"],score:94,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:33,track:"use",name:"AI 简历生成器",desc:"输入经历，AI 排版生成专业简历，支持多种模板导出 PDF。",tags:["简历","AI 排版","PDF"],score:93,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:34,track:"use",name:"Markdown 笔记 + AI 总结",desc:"所见即所得 Markdown 编辑器，AI 帮你总结和提炼要点。",tags:["Markdown","AI 总结","笔记"],score:92,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:35,track:"use",name:"番茄钟 + 专注统计",desc:"番茄工作法 + 专注时间统计 + 白噪音，养成专注习惯。",tags:["番茄钟","专注","白噪音"],score:91,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:36,track:"use",name:"AI 翻译 + 术语表",desc:"支持专业领域术语表的翻译工具，比 Google 翻译更精准。",tags:["AI 翻译","术语表","专业"],score:90,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:37,track:"use",name:"密码管理器",desc:"本地加密密码管理器，支持生成强密码和自动填充。",tags:["密码管理","本地加密","安全"],score:89,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:38,track:"use",name:"AI 邮件助手",desc:"帮你写邮件、总结收件箱、自动分类，邮箱效率翻倍。",tags:["AI 邮件","收件箱","分类"],score:88,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:39,track:"use",name:"文件批量重命名",desc:"拖拽文件，用正则或 AI 模式批量重命名，支持预览。",tags:["批量重命名","正则","拖拽"],score:87,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:40,track:"use",name:"二维码工具箱",desc:"批量生成、识别、美化二维码，支持 Logo 嵌入。",tags:["二维码","批量生成","美化"],score:86,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:41,track:"use",name:"AI 日程管理",desc:"自然语言输入日程，AI 自动解析时间和重复规则。",tags:["日程管理","自然语言","AI"],score:85,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:42,track:"use",name:"知识库搜索",desc:"本地文档向量化，支持语义搜索，替代 Ctrl+F。",tags:["向量搜索","本地文档","语义"],score:84,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:43,track:"use",name:"AI 代码审查助手",desc:"提交代码自动审查，指出潜在问题和优化建议。",tags:["代码审查","AI 分析","自动化"],score:83,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:44,track:"use",name:"网页截图 + 标注",desc:"输入 URL 自动截图，支持标注、箭头、文字叠加。",tags:["截图","标注","URL"],score:82,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:45,track:"use",name:"API 文档生成器",desc:"从代码注释自动生成漂亮的 API 文档，支持 OpenAPI。",tags:["API 文档","自动生成","OpenAPI"],score:81,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:46,track:"use",name:"CSV 数据可视化",desc:"拖入 CSV 自动生成图表，支持折线、柱状、饼图。",tags:["CSV","可视化","拖拽"],score:80,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:47,track:"use",name:"正则表达式测试器",desc:"实时测试正则，高亮匹配结果，内置常用模板。",tags:["正则测试","实时","模板"],score:79,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:48,track:"use",name:"AI 会议纪要",desc:"上传录音，AI 自动生成会议纪要、待办事项和摘要。",tags:["会议纪要","语音转文字","AI"],score:78,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:49,track:"use",name:"待办清单 + AI 排优先级",desc:"智能待办，AI 根据截止时间和重要性自动排序。",tags:["待办清单","AI 排序","优先级"],score:77,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:50,track:"use",name:"网页剪藏器",desc:"一键保存网页内容到本地，支持全文离线阅读。",tags:["网页剪藏","离线阅读","保存"],score:76,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:51,track:"use",name:"JSON 格式化工具",desc:"在线 JSON 格式化、压缩、对比、转换，开发者必备。",tags:["JSON","格式化","对比"],score:75,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:52,track:"use",name:"AI 配置文件助手",desc:"自然语言描述需求，AI 生成 Nginx/Docker 等配置。",tags:["配置生成","AI 助手","运维"],score:74,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:53,track:"use",name:"团队投票工具",desc:"创建投票、分享链接、实时计数，适合小团队决策。",tags:["投票","实时计数","分享"],score:73,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:54,track:"use",name:"Git 提交分析",desc:"可视化 Git 提交历史，分析代码贡献和热点文件。",tags:["Git 分析","可视化","统计"],score:72,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:55,track:"use",name:"AI 写作润色",desc:"粘贴文章，AI 润色语法、优化表达、调整风格。",tags:["AI 润色","语法","风格"],score:71,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:56,track:"use",name:"图片压缩工具",desc:"批量压缩图片，支持 WebP/AVIF 转换，拖拽上传。",tags:["图片压缩","批量","格式转换"],score:70,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:57,track:"use",name:"在线 Markdown 预览",desc:"实时预览 Markdown，支持导出 HTML/PDF，暗黑模式。",tags:["Markdown","预览","导出"],score:69,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:58,track:"use",name:"环境变量管理",desc:"可视化管理 .env 文件，支持多环境切换和加密。",tags:["环境变量","多环境","加密"],score:68,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:59,track:"use",name:"AI 代码解释器",desc:"粘贴代码，AI 逐行解释，支持多种编程语言。",tags:["代码解释","AI","多语言"],score:67,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:60,track:"use",name:"个人主页生成器",desc:"输入信息自动生成漂亮的个人主页，支持自定义主题。",tags:["个人主页","模板","自动"],score:66,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
 
   // 好搓 HARDWARE (30)
-  {id:61,track:"hw",name:"ESP32 气象站",desc:"温湿度+气压+空气质量，OLED 显示，WiFi 上传数据到网页。",tags:["ESP32","气象监测","WiFi 上传"],score:95,mvp:"2天",source:"",demo:""},
-  {id:62,track:"hw",name:"树莓派智能镜子",desc:"镜子上显示天气、日程、新闻，魔镜项目入门经典。",tags:["树莓派","智能镜子","信息展示"],score:94,mvp:"3天",source:"",demo:""},
-  {id:63,track:"hw",name:"Arduino 遥控小车",desc:"手机蓝牙控制小车，支持摄像头图传，机械入门首选。",tags:["Arduino","蓝牙控制","图传"],score:93,mvp:"2天",source:"",demo:""},
-  {id:64,track:"hw",name:"ESP32 门铃 + 人脸通知",desc:"有人按门铃拍照识别，推送通知到手机。",tags:["ESP32","人脸识别","推送通知"],score:92,mvp:"3天",source:"",demo:""},
-  {id:65,track:"hw",name:"树莓派 NAS 私有云",desc:"树莓派 + 硬盘 = 家庭私有云，支持 WebDAV 和自动备份。",tags:["树莓派","NAS","私有云"],score:91,mvp:"3天",source:"",demo:""},
-  {id:66,track:"hw",name:"LED 矩阵显示屏",desc:"可编程 LED 矩阵，显示文字、动画、像素画。",tags:["LED 矩阵","可编程","动画显示"],score:90,mvp:"1-2天",source:"",demo:""},
-  {id:67,track:"hw",name:"ESP32 智能插座",desc:"手机远程控制家电开关，定时任务，用电统计。",tags:["ESP32","远程控制","智能插座"],score:89,mvp:"2天",source:"",demo:""},
-  {id:68,track:"hw",name:"手势控制机械臂",desc:"用手势控制机械臂运动，传感器 + 舵机联动。",tags:["机械臂","手势控制","舵机"],score:88,mvp:"3-4天",source:"",demo:""},
-  {id:69,track:"hw",name:"树莓派复古游戏机",desc:"树莓派装 RetroPie，玩 NES/SNES/GBA 经典游戏。",tags:["树莓派","复古游戏","RetroPie"],score:87,mvp:"1天",source:"",demo:""},
-  {id:70,track:"hw",name:"ESP32 电子墨水屏日历",desc:"电子墨水屏显示日历、天气、待办，超低功耗。",tags:["电子墨水","低功耗","日历显示"],score:86,mvp:"2天",source:"",demo:""},
-  {id:71,track:"hw",name:"智能花盆监测",desc:"土壤湿度+光照+温度，自动浇水提醒，数据上云。",tags:["智能花盆","自动监测","浇水提醒"],score:85,mvp:"2天",source:"",demo:""},
-  {id:72,track:"hw",name:"DIY 键盘",desc:"自定义布局的机械键盘，QMK 固件，键帽自己选。",tags:["DIY 键盘","QMK","自定义布局"],score:84,mvp:"4-5天",source:"",demo:""},
-  {id:73,track:"hw",name:"ESP32 空气质量监测",desc:"PM2.5+CO2+TVOC 实时监测，网页仪表盘展示。",tags:["空气质量","实时监测","仪表盘"],score:83,mvp:"2天",source:"",demo:""},
-  {id:74,track:"hw",name:"树莓派安防摄像头",desc:"运动检测 + 录像 + 手机推送，替代商业安防。",tags:["树莓派","安防","运动检测"],score:82,mvp:"2-3天",source:"",demo:""},
-  {id:75,track:"hw",name:"语音助手音箱",desc:"ESP32 + 麦克风 + 喇叭 = 自制语音助手，支持离线唤醒。",tags:["语音助手","离线唤醒","ESP32"],score:81,mvp:"3-4天",source:"",demo:""},
-  {id:76,track:"hw",name:"LED 时钟",desc:"七段数码管时钟，NTP 同步，支持亮度自动调节。",tags:["LED 时钟","NTP 同步","七段数码管"],score:80,mvp:"1天",source:"",demo:""},
-  {id:77,track:"hw",name:"ESP32 蓝牙音箱",desc:"DIY 蓝牙音箱，3D 打印外壳，音质不输百元级。",tags:["蓝牙音箱","3D 打印","音频"],score:79,mvp:"3天",source:"",demo:""},
-  {id:78,track:"hw",name:"智能喂鱼器",desc:"定时喂鱼 + 远程控制 + 鱼缸温度监测。",tags:["智能喂鱼","定时控制","温度监测"],score:78,mvp:"2天",source:"",demo:""},
-  {id:79,track:"hw",name:"树莓派广告屏",desc:"轮播图片/视频的广告屏，网页后台管理内容。",tags:["广告屏","内容管理","树莓派"],score:77,mvp:"2天",source:"",demo:""},
-  {id:80,track:"hw",name:"ESP32 GPS 追踪器",desc:"实时位置追踪，地图展示，适合宠物/背包/自行车。",tags:["GPS","位置追踪","地图展示"],score:76,mvp:"2天",source:"",demo:""},
-  {id:81,track:"hw",name:"智能门锁",desc:"指纹/NFC/手机蓝牙开锁，开锁记录可查。",tags:["智能门锁","NFC","指纹识别"],score:75,mvp:"3-4天",source:"",demo:""},
-  {id:82,track:"hw",name:"ESP32 噪音监测",desc:"环境噪音实时监测，超标自动报警，数据可视化。",tags:["噪音监测","报警","数据可视化"],score:74,mvp:"1天",source:"",demo:""},
-  {id:83,track:"hw",name:"树莓派打印服务器",desc:"USB 打印机变网络打印机，支持 AirPrint。",tags:["打印服务器","网络打印","AirPrint"],score:73,mvp:"1天",source:"",demo:""},
-  {id:84,track:"hw",name:"电子货架标签",desc:"电子墨水屏显示商品价格，后台批量更新。",tags:["电子墨水","货架标签","批量更新"],score:72,mvp:"2-3天",source:"",demo:""},
-  {id:85,track:"hw",name:"ESP32 智能晾衣架",desc:"下雨自动收衣，晴天自动伸出，温湿度传感器控制。",tags:["智能晾衣","自动控制","传感器"],score:71,mvp:"3天",source:"",demo:""},
-  {id:86,track:"hw",name:"DIY 示波器",desc:"ESP32 采集信号，网页端显示波形，入门级示波器。",tags:["示波器","信号采集","波形显示"],score:70,mvp:"2天",source:"",demo:""},
-  {id:87,track:"hw",name:"智能体重秤",desc:"称重+体脂+WiFi 上传，历史数据趋势图。",tags:["体重秤","体脂监测","数据趋势"],score:69,mvp:"3天",source:"",demo:""},
-  {id:88,track:"hw",name:"ESP32 植物生长灯",desc:"根据植物需求自动调节光照时间和光谱。",tags:["生长灯","自动调节","光谱控制"],score:68,mvp:"2天",source:"",demo:""},
-  {id:89,track:"hw",name:"树莓派收音机",desc:"网络收音机，触摸屏选台，支持全球电台。",tags:["网络收音机","触摸屏","全球电台"],score:67,mvp:"2天",source:"",demo:""},
-  {id:90,track:"hw",name:"ESP32 烟雾报警",desc:"烟雾+火焰检测，声光报警+手机推送，家庭安全。",tags:["烟雾报警","火焰检测","安全监测"],score:66,mvp:"1-2天",source:"",demo:""}
+  {id:61,track:"hw",name:"ESP32 气象站",desc:"温湿度+气压+空气质量，OLED 显示，WiFi 上传数据到网页。",tags:["ESP32","气象","WiFi"],score:95,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:62,track:"hw",name:"树莓派智能镜子",desc:"镜子上显示天气、日程、新闻，魔镜项目入门经典。",tags:["树莓派","智能镜子","信息"],score:94,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:63,track:"hw",name:"Arduino 遥控小车",desc:"手机蓝牙控制小车，支持摄像头图传，机械入门首选。",tags:["Arduino","蓝牙","图传"],score:93,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:64,track:"hw",name:"ESP32 门铃 + 人脸通知",desc:"有人按门铃拍照识别，推送通知到手机。",tags:["ESP32","人脸识别","推送"],score:92,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:65,track:"hw",name:"树莓派 NAS 私有云",desc:"树莓派 + 硬盘 = 家庭私有云，支持 WebDAV 和自动备份。",tags:["树莓派","NAS","私有云"],score:91,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:66,track:"hw",name:"LED 矩阵显示屏",desc:"可编程 LED 矩阵，显示文字、动画、像素画。",tags:["LED","可编程","动画"],score:90,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:67,track:"hw",name:"ESP32 智能插座",desc:"手机远程控制家电开关，定时任务，用电统计。",tags:["ESP32","远程控制","智能"],score:89,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:68,track:"hw",name:"手势控制机械臂",desc:"用手势控制机械臂运动，传感器 + 舵机联动。",tags:["机械臂","手势","舵机"],score:88,mvp:"3-4天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:69,track:"hw",name:"树莓派复古游戏机",desc:"树莓派装 RetroPie，玩 NES/SNES/GBA 经典游戏。",tags:["树莓派","复古游戏","RetroPie"],score:87,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:70,track:"hw",name:"ESP32 电子墨水屏日历",desc:"电子墨水屏显示日历、天气、待办，超低功耗。",tags:["电子墨水","低功耗","日历"],score:86,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:71,track:"hw",name:"智能花盆监测",desc:"土壤湿度+光照+温度，自动浇水提醒，数据上云。",tags:["智能花盆","监测","浇水"],score:85,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:72,track:"hw",name:"DIY 键盘",desc:"自定义布局机械键盘，QMK 固件，键帽自己选。",tags:["DIY 键盘","QMK","自定义"],score:84,mvp:"4-5天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:73,track:"hw",name:"ESP32 空气质量监测",desc:"PM2.5+CO2+TVOC 实时监测，网页仪表盘展示。",tags:["空气质量","监测","仪表盘"],score:83,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:74,track:"hw",name:"树莓派安防摄像头",desc:"运动检测 + 录像 + 手机推送，替代商业安防。",tags:["树莓派","安防","运动检测"],score:82,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:75,track:"hw",name:"语音助手音箱",desc:"ESP32 + 麦克风 + 喇叭 = 自制语音助手，支持离线唤醒。",tags:["语音助手","离线","ESP32"],score:81,mvp:"3-4天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:76,track:"hw",name:"LED 时钟",desc:"七段数码管时钟，NTP 同步，支持亮度自动调节。",tags:["LED 时钟","NTP","数码管"],score:80,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:77,track:"hw",name:"ESP32 蓝牙音箱",desc:"DIY 蓝牙音箱，3D 打印外壳，音质不输百元级。",tags:["蓝牙音箱","3D 打印","音频"],score:79,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:78,track:"hw",name:"智能喂鱼器",desc:"定时喂鱼 + 远程控制 + 鱼缸温度监测。",tags:["智能喂鱼","定时","温度"],score:78,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:79,track:"hw",name:"树莓派广告屏",desc:"轮播图片/视频的广告屏，网页后台管理内容。",tags:["广告屏","内容管理","树莓派"],score:77,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:80,track:"hw",name:"ESP32 GPS 追踪器",desc:"实时位置追踪，地图展示，适合宠物/背包/自行车。",tags:["GPS","位置追踪","地图"],score:76,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:81,track:"hw",name:"智能门锁",desc:"指纹/NFC/手机蓝牙开锁，开锁记录可查。",tags:["智能门锁","NFC","指纹"],score:75,mvp:"3-4天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:82,track:"hw",name:"ESP32 噪音监测",desc:"环境噪音实时监测，超标自动报警，数据可视化。",tags:["噪音监测","报警","可视化"],score:74,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:83,track:"hw",name:"树莓派打印服务器",desc:"USB 打印机变网络打印机，支持 AirPrint。",tags:["打印服务器","网络打印","AirPrint"],score:73,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:84,track:"hw",name:"电子货架标签",desc:"电子墨水屏显示商品价格，后台批量更新。",tags:["电子墨水","货架标签","批量"],score:72,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:85,track:"hw",name:"ESP32 智能晾衣架",desc:"下雨自动收衣，晴天自动伸出，温湿度传感器控制。",tags:["智能晾衣","自动","传感器"],score:71,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:86,track:"hw",name:"DIY 示波器",desc:"ESP32 采集信号，网页端显示波形，入门级示波器。",tags:["示波器","信号采集","波形"],score:70,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:87,track:"hw",name:"智能体重秤",desc:"称重+体脂+WiFi 上传，历史数据趋势图。",tags:["体重秤","体脂","趋势"],score:69,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:88,track:"hw",name:"ESP32 植物生长灯",desc:"根据植物需求自动调节光照时间和光谱。",tags:["生长灯","自动调节","光谱"],score:68,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:89,track:"hw",name:"树莓派收音机",desc:"网络收音机，触摸屏选台，支持全球电台。",tags:["网络收音机","触摸屏","全球"],score:67,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:90,track:"hw",name:"ESP32 烟雾报警",desc:"烟雾+火焰检测，声光报警+手机推送，家庭安全。",tags:["烟雾报警","火焰检测","安全"],score:66,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""}
 ];
 
 const STARS = [
   {rank:1,name:"usestrix/strix",stars:"+10,759/周",desc:"开源 AI 渗透测试工具，帮你找出应用漏洞并给出修复建议。",tags:["AI 安全","漏洞修复"],url:"https://github.com/usestrix/strix"},
-  {rank:2,name:"msitarewski/agency-agents",stars:"+9,706/周",desc:"一整套 AI Agency 角色库，适合给 Codex 配团队。",tags:["Agent 团队","角色库"],url:"https://github.com/msitarzewski/agency-agents"},
+  {rank:2,name:"msitarzewski/agency-agents",stars:"+9,706/周",desc:"一整套 AI Agency 角色库，适合给 Codex 配团队。",tags:["Agent 团队","角色库"],url:"https://github.com/msitarzewski/agency-agents"},
   {rank:3,name:"JuliusBrussee/caveman",stars:"+7,780/周",desc:"Claude Code Skill，用极简表达压缩上下文，减少 token 消耗。",tags:["省 Token","Claude Skill"],url:"https://github.com/JuliusBrussee/caveman"},
   {rank:4,name:"DeusData/codebase-memory-mcp",stars:"+6,309/周",desc:"高性能代码智能 MCP，把代码库索引成持久知识图谱。",tags:["代码库记忆","MCP 索引"],url:"https://github.com/DeusData/codebase-memory-mcp"},
   {rank:5,name:"Zackriya-Solutions/meetily",stars:"+5,769/周",desc:"本地优先 AI 会议助手，支持实时转写和本地 Ollama 总结。",tags:["会议助手","实时转写"],url:"https://github.com/Zackriya-Solutions/meetily"},
@@ -327,11 +415,24 @@ function init() {
   renderBoardTabs();
   renderBoard();
   setupEvents();
+  setupScrollAnim();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function setupScrollAnim() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+  }, {threshold: 0.1});
+  document.querySelectorAll('.anim').forEach(el => obs.observe(el));
 }
 
 function renderStats() {
-  const tracks = {play:0,use:0,hw:0};
-  PROJECTS.forEach(p => tracks[p.track]++);
   document.getElementById('stats').innerHTML = `
     <div class="stat"><div class="num">${PROJECTS.length + STARS.length}</div><div class="label">总项目</div></div>
     <div class="stat"><div class="num">3+1</div><div class="label">分类</div></div>
@@ -353,39 +454,30 @@ function renderPicker() {
 
 function getRecommendations() {
   const {time,goal,form,comfort} = state.selections;
-  
-  // Score each project based on selections
   const scored = PROJECTS.map(p => {
     let s = p.score;
-    
-    // Time mapping
-    const timeMap = {newbie:"半天",deps:"1天",api:"2天",hw2:"3天"};
-    if (time === "2h") s += (p.mvp.includes("半天") ? 20 : p.mvp.includes("1天") ? 10 : -10);
-    if (time === "weekend") s += (p.mvp.includes("1-2天") ? 20 : p.mvp.includes("2天") ? 15 : p.mvp.includes("1天") ? 10 : 0);
-    if (time === "week") s += (p.mvp.includes("3") ? 15 : p.mvp.includes("2") ? 10 : 5);
-    if (time === "long") s += 10;
-    
-    // Goal mapping
-    if (goal === "demo") s += (p.tags.some(t => t.includes("演示") || t.includes("视觉") || t.includes("分享")) ? 15 : 0);
-    if (goal === "self") s += (p.track === "use" ? 10 : 0);
-    if (goal === "work") s += (p.track === "use" ? 15 : 0);
-    if (goal === "explore") s += (p.track === "star" ? 20 : 5);
-    
-    // Form mapping
-    if (form === "web") s += (p.track === "play" ? 15 : p.track === "use" ? 10 : -5);
-    if (form === "data") s += (p.track === "use" ? 15 : 0);
-    if (form === "agent") s += (p.tags.some(t => t.includes("AI")) ? 15 : 0);
-    if (form === "hw") s += (p.track === "hw" ? 20 : -10);
-    
-    // Comfort mapping
-    if (comfort === "newbie") s += (p.mvp.includes("半天") ? 15 : p.mvp.includes("1天") ? 10 : 0);
-    if (comfort === "deps") s += 5;
-    if (comfort === "api") s += 5;
-    if (comfort === "hw2") s += (p.track === "hw" ? 15 : 0);
-    
-    return {...p, finalScore: s};
+    // Time
+    if (time==="2h") s += (p.mvp.includes("半天")?20:p.mvp.includes("1天")&&!p.mvp.includes("1-2")?10:-10);
+    if (time==="weekend") s += (p.mvp.includes("1-2天")?20:p.mvp.includes("2天")?15:p.mvp.includes("1天")?10:0);
+    if (time==="week") s += (p.mvp.includes("3")?15:p.mvp.includes("2")?10:5);
+    if (time==="long") s += 10;
+    // Goal
+    if (goal==="demo") s += (p.tags.some(t=>t.includes("演示")||t.includes("视觉")||t.includes("分享")||t.includes("社交"))?15:0);
+    if (goal==="self") s += (p.track==="use"?12:0);
+    if (goal==="work") s += (p.track==="use"?18:0);
+    if (goal==="explore") s += (p.track==="star"?25:5);
+    // Form
+    if (form==="web") s += (p.track==="play"?15:p.track==="use"?10:-5);
+    if (form==="data") s += (p.track==="use"?15:0);
+    if (form==="agent") s += (p.tags.some(t=>t.includes("AI"))?15:0);
+    if (form==="hw") s += (p.track==="hw"?25:-10);
+    // Comfort
+    if (comfort==="newbie") s += (p.mvp.includes("半天")?18:p.mvp.includes("1天")&&!p.mvp.includes("1-2")?12:0);
+    if (comfort==="deps") s += 8;
+    if (comfort==="api") s += 8;
+    if (comfort==="hw2") s += (p.track==="hw"?20:0);
+    return {...p, finalScore: Math.round(s)};
   });
-  
   scored.sort((a,b) => b.finalScore - a.finalScore);
   return scored.slice(0, 3);
 }
@@ -393,24 +485,23 @@ function getRecommendations() {
 function renderRecommendations() {
   const recs = getRecommendations();
   const container = document.getElementById('recs');
-  const trackNames = {play:"好玩",use:"好用",hw:"好搓",star:"明星"};
-  const trackClasses = {play:"track-play",use:"track-use",hw:"track-hw",star:"track-star"};
-  
+  const tn = {play:"好玩",use:"好用",hw:"好搓",star:"明星"};
+  const tc = {play:"track-play",use:"track-use",hw:"track-hw",star:"track-star"};
   container.innerHTML = `
-    <div class="recs-title">🎯 为你推荐</div>
+    <div class="recs-title"><span>🎯</span> 为你推荐</div>
     <div class="rec-cards">
       ${recs.map((p,i) => `
         <div class="rec-card">
           <div class="rec-rank">#${i+1}</div>
-          <span class="rec-track ${trackClasses[p.track]}">${trackNames[p.track]}</span>
+          <span class="rec-track ${tc[p.track]}">${tn[p.track]}</span>
           <h3>${p.name}</h3>
           <p>${p.desc}</p>
           <div class="rec-tags">${p.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('')}</div>
           <div class="rec-score">⭐ ${p.finalScore} 分 · MVP ${p.mvp}</div>
           <div class="rec-actions">
-            ${p.source ? `<a class="btn-sm" href="${p.source}" target="_blank">📦 源码</a>` : ''}
-            ${p.demo ? `<a class="btn-sm" href="${p.demo}" target="_blank">🎮 演示</a>` : ''}
-            <button class="btn-sm" onclick="copyPrompt('${p.name}')">📋 复制开工提示词</button>
+            ${p.source&&p.source.includes('github.com')?`<a class="btn-sm" href="${p.source}" target="_blank">📦 源码</a>`:''}
+            ${p.demo?`<a class="btn-sm" href="${p.demo}" target="_blank">🎮 演示</a>`:''}
+            <button class="btn-sm" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">📋 复制开工提示词</button>
           </div>
         </div>
       `).join('')}
@@ -421,23 +512,17 @@ function renderRecommendations() {
 function renderStars() {
   document.getElementById('starsGrid').innerHTML = STARS.map(s => `
     <div class="star-card">
-      <div class="star-rank">#${s.rank} ${s.stars}</div>
+      <div class="star-rank">#${s.rank} <span style="color:var(--star)">${s.stars}</span></div>
       <h3>${s.name}</h3>
       <p>${s.desc}</p>
       <div class="rec-tags">${s.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('')}</div>
-      <a class="btn-sm" href="${s.url}" target="_blank" style="margin-top:8px;display:inline-block">🔗 GitHub</a>
+      <a class="btn-sm" href="${s.url}" target="_blank" style="margin-top:10px;display:inline-flex">🔗 GitHub</a>
     </div>
   `).join('');
 }
 
 function renderBoardTabs() {
-  const tabs = [
-    {id:"all",label:"全部"},
-    {id:"play",label:"好玩"},
-    {id:"use",label:"好用"},
-    {id:"hw",label:"好搓"},
-    {id:"star",label:"明星"}
-  ];
+  const tabs = [{id:"all",label:"全部"},{id:"play",label:"好玩"},{id:"use",label:"好用"},{id:"hw",label:"好搓"},{id:"star",label:"明星"}];
   document.getElementById('boardTabs').innerHTML = tabs.map(t =>
     `<button class="board-tab ${state.boardFilter===t.id?'active':''}" data-filter="${t.id}">${t.label}</button>`
   ).join('');
@@ -445,68 +530,56 @@ function renderBoardTabs() {
 
 function renderBoard() {
   let items = state.boardFilter === 'star' ? STARS.map(s => ({
-    id: 's'+s.rank, track:'star', name:s.name, desc:s.desc, tags:s.tags,
-    score:0, mvp:'', source:s.url, demo:'', stars:s.stars
+    id:'s'+s.rank,track:'star',name:s.name,desc:s.desc,tags:s.tags,score:0,mvp:'',source:s.url,demo:'',stars:s.stars
   })) : [...PROJECTS];
-
-  if (state.boardFilter !== 'all' && state.boardFilter !== 'star') {
-    items = items.filter(p => p.track === state.boardFilter);
-  }
-
+  if (state.boardFilter!=='all'&&state.boardFilter!=='star') items = items.filter(p=>p.track===state.boardFilter);
   if (state.boardSearch) {
     const q = state.boardSearch.toLowerCase();
-    items = items.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.desc.toLowerCase().includes(q) ||
-      p.tags.some(t => t.toLowerCase().includes(q))
-    );
+    items = items.filter(p=>p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)||p.tags.some(t=>t.toLowerCase().includes(q)));
   }
-
-  const trackNames = {play:"好玩",use:"好用",hw:"好搓",star:"明星"};
-  const trackClasses = {play:"track-play",use:"track-use",hw:"track-hw",star:"track-star"};
-
-  document.getElementById('boardGrid').innerHTML = items.map((p,i) => `
+  const tn = {play:"好玩",use:"好用",hw:"好搓",star:"明星"};
+  const tc = {play:"track-play",use:"track-use",hw:"track-hw",star:"track-star"};
+  const grid = document.getElementById('boardGrid');
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty"><div class="icon">🔍</div><p>没有找到匹配的项目，换个关键词试试？</p></div>';
+    return;
+  }
+  grid.innerHTML = items.map(p => `
     <div class="proj-card">
       <div class="proj-head">
-        <span class="proj-num">#${p.id}</span>
-        <span class="rec-track ${trackClasses[p.track]}">${trackNames[p.track]}</span>
+        <span class="proj-num">#${typeof p.id==='string'?p.id.slice(1):p.id}</span>
+        <span class="rec-track ${tc[p.track]}">${tn[p.track]}</span>
         <h3>${p.name}</h3>
       </div>
       <p>${p.desc}</p>
       <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
       <div class="proj-bottom">
-        <span class="proj-score" style="color:var(--accent2)">${p.stars ? p.stars : '⭐ ' + p.score + ' · MVP ' + p.mvp}</span>
+        <span class="proj-score">${p.stars?p.stars:'⭐ '+p.score+' · MVP '+p.mvp}</span>
         <div class="proj-links">
-          ${p.source ? `<a class="proj-link" href="${p.source}" target="_blank">源码</a>` : ''}
-          ${p.demo ? `<a class="proj-link" href="${p.demo}" target="_blank">演示</a>` : ''}
+          ${p.source&&p.source.includes('github.com')?`<a class="proj-link" href="${p.source}" target="_blank">源码</a>`:''}
+          ${p.demo?`<a class="proj-link" href="${p.demo}" target="_blank">演示</a>`:''}
+          ${p.track!=='star'?`<button class="proj-link" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">开工提示词</button>`:''}
         </div>
       </div>
     </div>
-  `).join('') || '<p style="color:var(--dim);grid-column:1/-1;text-align:center;padding:40px">没有找到匹配的项目</p>';
+  `).join('');
 }
 
 function setupEvents() {
-  // Picker bubbles
   document.getElementById('pickerGroups').addEventListener('click', e => {
-    const bubble = e.target.closest('.bubble');
-    if (!bubble) return;
-    const group = bubble.dataset.group;
-    const value = bubble.dataset.value;
-    state.selections[group] = value;
+    const b = e.target.closest('.bubble');
+    if (!b) return;
+    state.selections[b.dataset.group] = b.dataset.value;
     renderPicker();
     renderRecommendations();
   });
-
-  // Board tabs
   document.getElementById('boardTabs').addEventListener('click', e => {
-    const tab = e.target.closest('.board-tab');
-    if (!tab) return;
-    state.boardFilter = tab.dataset.filter;
+    const t = e.target.closest('.board-tab');
+    if (!t) return;
+    state.boardFilter = t.dataset.filter;
     renderBoardTabs();
     renderBoard();
   });
-
-  // Board search
   document.getElementById('boardSearch').addEventListener('input', e => {
     state.boardSearch = e.target.value;
     renderBoard();
@@ -515,10 +588,10 @@ function setupEvents() {
 
 function copyPrompt(name) {
   const prompt = `我想做一个叫"${name}"的 Vibe Coding 项目。请帮我：\n1. 分析这个项目的核心功能\n2. 选择合适的技术栈\n3. 制定 MVP 开发计划\n4. 给出开工的第一步`;
-  navigator.clipboard.writeText(prompt).then(() => {
-    alert('✅ 开工提示词已复制到剪贴板！');
-  }).catch(() => {
-    prompt('复制以下提示词：', prompt);
+  navigator.clipboard.writeText(prompt).then(() => showToast('✅ 开工提示词已复制！')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = prompt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('✅ 开工提示词已复制！');
   });
 }
 
