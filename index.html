@@ -155,6 +155,20 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--accent);color:#fff;padding:12px 24px;border-radius:24px;font-size:.85rem;font-weight:600;z-index:1000;transition:.4s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
+/* DETAIL PANEL */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;opacity:0;pointer-events:none;transition:.3s}
+.detail-overlay.open{opacity:1;pointer-events:all}
+.detail-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);width:90%;max-width:560px;max-height:80vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;z-index:201;opacity:0;pointer-events:none;transition:.3s}
+.detail-panel.open{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
+.detail-panel h2{font-size:1.2rem;font-weight:800;margin-bottom:12px}
+.detail-panel .desc{color:var(--dim);font-size:.9rem;line-height:1.7;margin-bottom:16px}
+.detail-panel .meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.detail-panel .meta-item{padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:.78rem;font-weight:600}
+.detail-panel .prompt-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:.82rem;line-height:1.6;color:var(--dim);margin-bottom:16px;white-space:pre-wrap}
+.detail-panel .close-btn{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--dim);font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:8px;transition:.2s}
+.detail-panel .close-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
+.star-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:.7rem;background:rgba(253,203,110,.12);color:var(--star);font-weight:600}
+
 /* FOOTER */
 .footer{text-align:center;padding:48px 24px;border-top:1px solid var(--border);color:var(--dim);font-size:.78rem}
 .footer a{color:var(--accent2);font-weight:600}
@@ -264,6 +278,19 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
   <p style="margin-top:8px">Made with ❤️ by <a href="https://github.com/DorianChn" target="_blank">山川志</a> · <a href="https://github.com/DorianChn/CodeCraft" target="_blank">GitHub</a></p>
 </footer>
 
+<!-- DETAIL OVERLAY -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
+<div class="detail-panel" id="detailPanel">
+  <button class="close-btn" onclick="closeDetail()">✕</button>
+  <h2 id="detailTitle"></h2>
+  <div class="desc" id="detailDesc"></div>
+  <div class="meta" id="detailMeta"></div>
+  <div class="rec-tags" id="detailTags"></div>
+  <h3 style="font-size:.9rem;margin:16px 0 8px">📋 开工提示词</h3>
+  <div class="prompt-box" id="detailPrompt"></div>
+  <div class="rec-actions" id="detailActions"></div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -273,98 +300,98 @@ const PROJECTS = [
   // 好玩 PLAY (30)
   {id:1,track:"play",name:"AI 小镇 / NPC 社交游戏",desc:"让多个 AI 角色在一个小地图上自主社交、记忆、产生剧情。经典入门项目，展示效果拉满。",tags:["AI 角色","角色记忆","小地图"],score:95,mvp:"1-2天",source:"https://github.com/joonspk-research/generative_agents",demo:"https://ai-town.vercel.app"},
   {id:2,track:"play",name:"手势控制小游戏",desc:"用摄像头识别手势来控制游戏，体感互动，适合演示。",tags:["摄像头","体感控制","音效"],score:92,mvp:"1天",source:"https://github.com/niconielsen32/Computer-Vision",demo:""},
-  {id:3,track:"play",name:"节点式视觉实验室",desc:"拖拽节点连接参数，实时生成视觉效果，像 Blender 的节点编辑器。",tags:["节点编排","参数画布","海报"],score:90,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:4,track:"play",name:"浏览器迷你音频工作站",desc:"在浏览器里剪辑音频、变声、采样，不需要装软件。",tags:["波形剪辑","变声","导出"],score:88,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://audiomass.co"},
-  {id:5,track:"play",name:"物理沙盒 / 像素炼金术",desc:"模拟水、火、沙等材料的物理反应，像素风沙盒。",tags:["像素沙盒","材料反应","涌现"],score:87,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://sandspiel.club"},
-  {id:6,track:"play",name:"浏览器视觉合成器",desc:"实时生成迷幻视觉效果，配合音乐节奏变形，适合直播背景。",tags:["实时视觉","代码演出","节奏"],score:86,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://hydra.ojack.xyz"},
-  {id:7,track:"play",name:"生成式海报工厂",desc:"输入参数自动生成艺术海报，支持随机种子和 PNG 导出。",tags:["参数海报","随机种子","PNG"],score:85,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:8,track:"play",name:"多人涂鸦白板",desc:"实时多人协作在线白板，WebSocket 同步，适合演示全栈。",tags:["实时协作","WebSocket","画板"],score:84,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:"https://excalidraw.com"},
-  {id:9,track:"play",name:"3D 唐诗星系",desc:"每颗星星是一首唐诗，点击展开，用 Three.js 做沉浸式阅读。",tags:["Three.js","唐诗","3D"],score:83,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:10,track:"play",name:"像素风复古 iPod",desc:"复古 iPod 界面 + 音乐 API，可以播放真实歌曲。",tags:["复古 UI","音乐","像素风"],score:82,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:11,track:"play",name:"AI 表情包生成器",desc:"输入文字生成表情包，支持自定义模板，一键分享。",tags:["表情包","AI 生图","社交"],score:81,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:12,track:"play",name:"像素画编辑器",desc:"浏览器里的像素画工具，支持图层、动画帧、导出 GIF。",tags:["像素画","动画帧","GIF"],score:80,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:13,track:"play",name:"AI 猜画小歌",desc:"你画 AI 猜，实时识别涂鸦内容，类似 Google Quick Draw。",tags:["涂鸦识别","AI 猜测","实时"],score:79,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:14,track:"play",name:"MIDI 音乐可视化",desc:"播放 MIDI 文件时同步生成粒子动画，视觉听觉联动。",tags:["MIDI","粒子","可视化"],score:78,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:15,track:"play",name:"贪吃蛇 AI 对战",desc:"经典贪吃蛇 + AI 自动寻路，人机对战，展示算法之美。",tags:["贪吃蛇","AI 算法","对战"],score:77,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:16,track:"play",name:"赛博朋克时钟",desc:"霓虹风格实时时钟，支持多种主题和动画效果。",tags:["赛博朋克","时钟","CSS 动画"],score:76,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:17,track:"play",name:"烟花模拟器",desc:"点击屏幕放烟花，物理模拟粒子轨迹，适合节日分享。",tags:["粒子系统","物理","交互"],score:75,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:18,track:"play",name:"AI 故事生成器",desc:"输入开头，AI 续写故事，支持分支选择，生成互动小说。",tags:["AI 文本","互动小说","分支"],score:74,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:19,track:"play",name:"实时弹幕系统",desc:"视频弹幕 + WebSocket 实时同步，支持颜色和滚动方向。",tags:["弹幕","WebSocket","实时"],score:73,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:20,track:"play",name:"迷宫生成与求解",desc:"算法自动生成迷宫，支持 A*、BFS 等多种求解动画。",tags:["迷宫","路径算法","动画"],score:72,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:21,track:"play",name:"AI 配色方案生成",desc:"描述风格，AI 生成和谐配色方案，导出 CSS 变量。",tags:["AI 配色","CSS","设计"],score:71,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:22,track:"play",name:"打字速度挑战",desc:"实时打字测速，支持中文，排行榜功能，适合多人竞技。",tags:["打字测速","排行榜","中文"],score:70,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:23,track:"play",name:"天气粒子动画",desc:"根据实时天气数据生成对应粒子动画效果（雨、雪、晴）。",tags:["天气 API","粒子","实时"],score:69,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:24,track:"play",name:"AI 人脸融合",desc:"上传两张照片，AI 融合成一张新面孔，社交裂变神器。",tags:["人脸融合","AI 图像","社交"],score:68,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:25,track:"play",name:"像素鸟 AI 训练",desc:"看着 AI 自己学会玩像素鸟，强化学习可视化。",tags:["强化学习","游戏 AI","可视化"],score:67,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:26,track:"play",name:"音乐节奏游戏",desc:"自动生成谱面的音游，支持自定义音乐，浏览器直接玩。",tags:["音游","谱面生成","音乐"],score:66,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:27,track:"play",name:"AI 宠物养成",desc:"养一只 AI 宠物，它会学习你的习惯，做出不同反应。",tags:["AI 宠物","习惯学习","养成"],score:65,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:28,track:"play",name:"全息投影效果",desc:"CSS 实现的全息投影视觉效果，科幻感拉满。",tags:["全息效果","CSS 3D","科幻"],score:64,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:29,track:"play",name:"实时聊天室",desc:"匿名聊天室 + 表情包 + 在线人数，WebSocket 全栈项目。",tags:["匿名聊天","WebSocket","全栈"],score:63,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:30,track:"play",name:"AI 绘本生成器",desc:"输入故事主题，AI 生成图文并茂的儿童绘本 PDF。",tags:["AI 绘本","图文","PDF"],score:62,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:3,track:"play",name:"节点式视觉实验室",desc:"拖拽节点连接参数，实时生成视觉效果，像 Blender 的节点编辑器。",tags:["节点编排","参数画布","海报"],score:90,mvp:"2-3天",source:"",demo:""},
+  {id:4,track:"play",name:"浏览器迷你音频工作站",desc:"在浏览器里剪辑音频、变声、采样，不需要装软件。",tags:["波形剪辑","变声","导出"],score:88,mvp:"2天",source:"https://github.com/janmonschke/Web-Audio-Editor",demo:"https://audiomass.co"},
+  {id:5,track:"play",name:"物理沙盒 / 像素炼金术",desc:"模拟水、火、沙等材料的物理反应，像素风沙盒。",tags:["像素沙盒","材料反应","涌现"],score:87,mvp:"1-2天",source:"https://github.com/phoenix1803/Falling-Sand-Simulation",demo:"https://sandspiel.club"},
+  {id:6,track:"play",name:"浏览器视觉合成器",desc:"实时生成迷幻视觉效果，配合音乐节奏变形，适合直播背景。",tags:["实时视觉","代码演出","节奏"],score:86,mvp:"1天",source:"https://github.com/hydra-synth/hydra",demo:"https://hydra.ojack.xyz"},
+  {id:7,track:"play",name:"生成式海报工厂",desc:"输入参数自动生成艺术海报，支持随机种子和 PNG 导出。",tags:["参数海报","随机种子","PNG"],score:85,mvp:"1天",source:"https://github.com/stc/generative-art-workshop",demo:""},
+  {id:8,track:"play",name:"多人涂鸦白板",desc:"实时多人协作在线白板，WebSocket 同步，适合演示全栈。",tags:["实时协作","WebSocket","画板"],score:84,mvp:"1-2天",source:"https://github.com/excalidraw/excalidraw",demo:"https://excalidraw.com"},
+  {id:9,track:"play",name:"3D 唐诗星系",desc:"每颗星星是一首唐诗，点击展开，用 Three.js 做沉浸式阅读。",tags:["Three.js","唐诗","3D"],score:83,mvp:"2天",source:"https://github.com/tensorspace-team/tensorspace",demo:""},
+  {id:10,track:"play",name:"像素风复古 iPod",desc:"复古 iPod 界面 + 音乐 API，可以播放真实歌曲。",tags:["复古 UI","音乐","像素风"],score:82,mvp:"1天",source:"",demo:""},
+  {id:11,track:"play",name:"AI 表情包生成器",desc:"输入文字生成表情包，支持自定义模板，一键分享。",tags:["表情包","AI 生图","社交"],score:81,mvp:"半天",source:"https://github.com/georapbox/meme-generator",demo:""},
+  {id:12,track:"play",name:"像素画编辑器",desc:"浏览器里的像素画工具，支持图层、动画帧、导出 GIF。",tags:["像素画","动画帧","GIF"],score:80,mvp:"2天",source:"https://github.com/abdulfatai360/pixel-art-maker",demo:""},
+  {id:13,track:"play",name:"AI 猜画小歌",desc:"你画 AI 猜，实时识别涂鸦内容，类似 Google Quick Draw。",tags:["涂鸦识别","AI 猜测","实时"],score:79,mvp:"1天",source:"https://github.com/anubhavshrimal/Quick-Draw",demo:""},
+  {id:14,track:"play",name:"MIDI 音乐可视化",desc:"播放 MIDI 文件时同步生成粒子动画，视觉听觉联动。",tags:["MIDI","粒子","可视化"],score:78,mvp:"1-2天",source:"https://github.com/TrueshotBarrage/midi-visualizer",demo:""},
+  {id:15,track:"play",name:"贪吃蛇 AI 对战",desc:"经典贪吃蛇 + AI 自动寻路，人机对战，展示算法之美。",tags:["贪吃蛇","AI 算法","对战"],score:77,mvp:"半天",source:"https://github.com/tanvirtin/snake-neural-networks",demo:""},
+  {id:16,track:"play",name:"赛博朋克时钟",desc:"霓虹风格实时时钟，支持多种主题和动画效果。",tags:["赛博朋克","时钟","CSS 动画"],score:76,mvp:"半天",source:"https://github.com/codebysrk/CyberClock",demo:""},
+  {id:17,track:"play",name:"烟花模拟器",desc:"点击屏幕放烟花，物理模拟粒子轨迹，适合节日分享。",tags:["粒子系统","物理","交互"],score:75,mvp:"1天",source:"",demo:""},
+  {id:18,track:"play",name:"AI 故事生成器",desc:"输入开头，AI 续写故事，支持分支选择，生成互动小说。",tags:["AI 文本","互动小说","分支"],score:74,mvp:"1天",source:"",demo:""},
+  {id:19,track:"play",name:"实时弹幕系统",desc:"视频弹幕 + WebSocket 实时同步，支持颜色和滚动方向。",tags:["弹幕","WebSocket","实时"],score:73,mvp:"1天",source:"https://github.com/youngerheart/danmaku",demo:""},
+  {id:20,track:"play",name:"迷宫生成与求解",desc:"算法自动生成迷宫，支持 A*、BFS 等多种求解动画。",tags:["迷宫","路径算法","动画"],score:72,mvp:"1天",source:"https://github.com/dmaydan/Maze_Solver_Generator",demo:""},
+  {id:21,track:"play",name:"AI 配色方案生成",desc:"描述风格，AI 生成和谐配色方案，导出 CSS 变量。",tags:["AI 配色","CSS","设计"],score:71,mvp:"半天",source:"",demo:""},
+  {id:22,track:"play",name:"打字速度挑战",desc:"实时打字测速，支持中文，排行榜功能，适合多人竞技。",tags:["打字测速","排行榜","中文"],score:70,mvp:"1天",source:"",demo:""},
+  {id:23,track:"play",name:"天气粒子动画",desc:"根据实时天气数据生成对应粒子动画效果（雨、雪、晴）。",tags:["天气 API","粒子","实时"],score:69,mvp:"1天",source:"",demo:""},
+  {id:24,track:"play",name:"AI 人脸融合",desc:"上传两张照片，AI 融合成一张新面孔，社交裂变神器。",tags:["人脸融合","AI 图像","社交"],score:68,mvp:"1-2天",source:"",demo:""},
+  {id:25,track:"play",name:"像素鸟 AI 训练",desc:"看着 AI 自己学会玩像素鸟，强化学习可视化。",tags:["强化学习","游戏 AI","可视化"],score:67,mvp:"1-2天",source:"https://github.com/guilhermecff/Flappy-Bird-AI",demo:""},
+  {id:26,track:"play",name:"音乐节奏游戏",desc:"自动生成谱面的音游，支持自定义音乐，浏览器直接玩。",tags:["音游","谱面生成","音乐"],score:66,mvp:"2-3天",source:"",demo:""},
+  {id:27,track:"play",name:"AI 宠物养成",desc:"养一只 AI 宠物，它会学习你的习惯，做出不同反应。",tags:["AI 宠物","习惯学习","养成"],score:65,mvp:"2天",source:"",demo:""},
+  {id:28,track:"play",name:"全息投影效果",desc:"CSS 实现的全息投影视觉效果，科幻感拉满。",tags:["全息效果","CSS 3D","科幻"],score:64,mvp:"半天",source:"",demo:""},
+  {id:29,track:"play",name:"实时聊天室",desc:"匿名聊天室 + 表情包 + 在线人数，WebSocket 全栈项目。",tags:["匿名聊天","WebSocket","全栈"],score:63,mvp:"1天",source:"",demo:""},
+  {id:30,track:"play",name:"AI 绘本生成器",desc:"输入故事主题，AI 生成图文并茂的儿童绘本 PDF。",tags:["AI 绘本","图文","PDF"],score:62,mvp:"1-2天",source:"",demo:""},
 
   // 好用 UTILITY (30)
   {id:31,track:"use",name:"收藏夹 + AI 阅读收件箱",desc:"保存链接自动抓取正文，AI 生成摘要和标签，替代 Pocket。",tags:["链接归档","正文抓取","AI 标签"],score:96,mvp:"2天",source:"https://github.com/linkwarden/linkwarden",demo:""},
-  {id:32,track:"use",name:"个人记账 + AI 分析",desc:"记账本 + AI 消费分析，自动分类、月度报告、预算提醒。",tags:["记账","AI 分析","预算"],score:94,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:33,track:"use",name:"AI 简历生成器",desc:"输入经历，AI 排版生成专业简历，支持多种模板导出 PDF。",tags:["简历","AI 排版","PDF"],score:93,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:34,track:"use",name:"Markdown 笔记 + AI 总结",desc:"所见即所得 Markdown 编辑器，AI 帮你总结和提炼要点。",tags:["Markdown","AI 总结","笔记"],score:92,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:35,track:"use",name:"番茄钟 + 专注统计",desc:"番茄工作法 + 专注时间统计 + 白噪音，养成专注习惯。",tags:["番茄钟","专注","白噪音"],score:91,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:36,track:"use",name:"AI 翻译 + 术语表",desc:"支持专业领域术语表的翻译工具，比 Google 翻译更精准。",tags:["AI 翻译","术语表","专业"],score:90,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:37,track:"use",name:"密码管理器",desc:"本地加密密码管理器，支持生成强密码和自动填充。",tags:["密码管理","本地加密","安全"],score:89,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:38,track:"use",name:"AI 邮件助手",desc:"帮你写邮件、总结收件箱、自动分类，邮箱效率翻倍。",tags:["AI 邮件","收件箱","分类"],score:88,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:39,track:"use",name:"文件批量重命名",desc:"拖拽文件，用正则或 AI 模式批量重命名，支持预览。",tags:["批量重命名","正则","拖拽"],score:87,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:40,track:"use",name:"二维码工具箱",desc:"批量生成、识别、美化二维码，支持 Logo 嵌入。",tags:["二维码","批量生成","美化"],score:86,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:41,track:"use",name:"AI 日程管理",desc:"自然语言输入日程，AI 自动解析时间和重复规则。",tags:["日程管理","自然语言","AI"],score:85,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:42,track:"use",name:"知识库搜索",desc:"本地文档向量化，支持语义搜索，替代 Ctrl+F。",tags:["向量搜索","本地文档","语义"],score:84,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:43,track:"use",name:"AI 代码审查助手",desc:"提交代码自动审查，指出潜在问题和优化建议。",tags:["代码审查","AI 分析","自动化"],score:83,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:44,track:"use",name:"网页截图 + 标注",desc:"输入 URL 自动截图，支持标注、箭头、文字叠加。",tags:["截图","标注","URL"],score:82,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:45,track:"use",name:"API 文档生成器",desc:"从代码注释自动生成漂亮的 API 文档，支持 OpenAPI。",tags:["API 文档","自动生成","OpenAPI"],score:81,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:46,track:"use",name:"CSV 数据可视化",desc:"拖入 CSV 自动生成图表，支持折线、柱状、饼图。",tags:["CSV","可视化","拖拽"],score:80,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:47,track:"use",name:"正则表达式测试器",desc:"实时测试正则，高亮匹配结果，内置常用模板。",tags:["正则测试","实时","模板"],score:79,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:48,track:"use",name:"AI 会议纪要",desc:"上传录音，AI 自动生成会议纪要、待办事项和摘要。",tags:["会议纪要","语音转文字","AI"],score:78,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:49,track:"use",name:"待办清单 + AI 排优先级",desc:"智能待办，AI 根据截止时间和重要性自动排序。",tags:["待办清单","AI 排序","优先级"],score:77,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:50,track:"use",name:"网页剪藏器",desc:"一键保存网页内容到本地，支持全文离线阅读。",tags:["网页剪藏","离线阅读","保存"],score:76,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:51,track:"use",name:"JSON 格式化工具",desc:"在线 JSON 格式化、压缩、对比、转换，开发者必备。",tags:["JSON","格式化","对比"],score:75,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:52,track:"use",name:"AI 配置文件助手",desc:"自然语言描述需求，AI 生成 Nginx/Docker 等配置。",tags:["配置生成","AI 助手","运维"],score:74,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:53,track:"use",name:"团队投票工具",desc:"创建投票、分享链接、实时计数，适合小团队决策。",tags:["投票","实时计数","分享"],score:73,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:54,track:"use",name:"Git 提交分析",desc:"可视化 Git 提交历史，分析代码贡献和热点文件。",tags:["Git 分析","可视化","统计"],score:72,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:55,track:"use",name:"AI 写作润色",desc:"粘贴文章，AI 润色语法、优化表达、调整风格。",tags:["AI 润色","语法","风格"],score:71,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:56,track:"use",name:"图片压缩工具",desc:"批量压缩图片，支持 WebP/AVIF 转换，拖拽上传。",tags:["图片压缩","批量","格式转换"],score:70,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:57,track:"use",name:"在线 Markdown 预览",desc:"实时预览 Markdown，支持导出 HTML/PDF，暗黑模式。",tags:["Markdown","预览","导出"],score:69,mvp:"半天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:58,track:"use",name:"环境变量管理",desc:"可视化管理 .env 文件，支持多环境切换和加密。",tags:["环境变量","多环境","加密"],score:68,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:59,track:"use",name:"AI 代码解释器",desc:"粘贴代码，AI 逐行解释，支持多种编程语言。",tags:["代码解释","AI","多语言"],score:67,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:60,track:"use",name:"个人主页生成器",desc:"输入信息自动生成漂亮的个人主页，支持自定义主题。",tags:["个人主页","模板","自动"],score:66,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
+  {id:32,track:"use",name:"个人记账 + AI 分析",desc:"记账本 + AI 消费分析，自动分类、月度报告、预算提醒。",tags:["记账","AI 分析","预算"],score:94,mvp:"2天",source:"",demo:""},
+  {id:33,track:"use",name:"AI 简历生成器",desc:"输入经历，AI 排版生成专业简历，支持多种模板导出 PDF。",tags:["简历","AI 排版","PDF"],score:93,mvp:"1天",source:"https://github.com/Sagar-rolex/AI-ResumeBuilder",demo:""},
+  {id:34,track:"use",name:"Markdown 笔记 + AI 总结",desc:"所见即所得 Markdown 编辑器，AI 帮你总结和提炼要点。",tags:["Markdown","AI 总结","笔记"],score:92,mvp:"2天",source:"https://github.com/brufdev/many-notes",demo:""},
+  {id:35,track:"use",name:"番茄钟 + 专注统计",desc:"番茄工作法 + 专注时间统计 + 白噪音，养成专注习惯。",tags:["番茄钟","专注","白噪音"],score:91,mvp:"1天",source:"",demo:""},
+  {id:36,track:"use",name:"AI 翻译 + 术语表",desc:"支持专业领域术语表的翻译工具，比 Google 翻译更精准。",tags:["AI 翻译","术语表","专业"],score:90,mvp:"1-2天",source:"",demo:""},
+  {id:37,track:"use",name:"密码管理器",desc:"本地加密密码管理器，支持生成强密码和自动填充。",tags:["密码管理","本地加密","安全"],score:89,mvp:"2-3天",source:"",demo:""},
+  {id:38,track:"use",name:"AI 邮件助手",desc:"帮你写邮件、总结收件箱、自动分类，邮箱效率翻倍。",tags:["AI 邮件","收件箱","分类"],score:88,mvp:"2天",source:"",demo:""},
+  {id:39,track:"use",name:"文件批量重命名",desc:"拖拽文件，用正则或 AI 模式批量重命名，支持预览。",tags:["批量重命名","正则","拖拽"],score:87,mvp:"半天",source:"",demo:""},
+  {id:40,track:"use",name:"二维码工具箱",desc:"批量生成、识别、美化二维码，支持 Logo 嵌入。",tags:["二维码","批量生成","美化"],score:86,mvp:"半天",source:"",demo:""},
+  {id:41,track:"use",name:"AI 日程管理",desc:"自然语言输入日程，AI 自动解析时间和重复规则。",tags:["日程管理","自然语言","AI"],score:85,mvp:"1-2天",source:"",demo:""},
+  {id:42,track:"use",name:"知识库搜索",desc:"本地文档向量化，支持语义搜索，替代 Ctrl+F。",tags:["向量搜索","本地文档","语义"],score:84,mvp:"2天",source:"",demo:""},
+  {id:43,track:"use",name:"AI 代码审查助手",desc:"提交代码自动审查，指出潜在问题和优化建议。",tags:["代码审查","AI 分析","自动化"],score:83,mvp:"2天",source:"",demo:""},
+  {id:44,track:"use",name:"网页截图 + 标注",desc:"输入 URL 自动截图，支持标注、箭头、文字叠加。",tags:["截图","标注","URL"],score:82,mvp:"1天",source:"",demo:""},
+  {id:45,track:"use",name:"API 文档生成器",desc:"从代码注释自动生成漂亮的 API 文档，支持 OpenAPI。",tags:["API 文档","自动生成","OpenAPI"],score:81,mvp:"1-2天",source:"",demo:""},
+  {id:46,track:"use",name:"CSV 数据可视化",desc:"拖入 CSV 自动生成图表，支持折线、柱状、饼图。",tags:["CSV","可视化","拖拽"],score:80,mvp:"1天",source:"",demo:""},
+  {id:47,track:"use",name:"正则表达式测试器",desc:"实时测试正则，高亮匹配结果，内置常用模板。",tags:["正则测试","实时","模板"],score:79,mvp:"半天",source:"",demo:""},
+  {id:48,track:"use",name:"AI 会议纪要",desc:"上传录音，AI 自动生成会议纪要、待办事项和摘要。",tags:["会议纪要","语音转文字","AI"],score:78,mvp:"2天",source:"",demo:""},
+  {id:49,track:"use",name:"待办清单 + AI 排优先级",desc:"智能待办，AI 根据截止时间和重要性自动排序。",tags:["待办清单","AI 排序","优先级"],score:77,mvp:"1天",source:"",demo:""},
+  {id:50,track:"use",name:"网页剪藏器",desc:"一键保存网页内容到本地，支持全文离线阅读。",tags:["网页剪藏","离线阅读","保存"],score:76,mvp:"1天",source:"",demo:""},
+  {id:51,track:"use",name:"JSON 格式化工具",desc:"在线 JSON 格式化、压缩、对比、转换，开发者必备。",tags:["JSON","格式化","对比"],score:75,mvp:"半天",source:"",demo:""},
+  {id:52,track:"use",name:"AI 配置文件助手",desc:"自然语言描述需求，AI 生成 Nginx/Docker 等配置。",tags:["配置生成","AI 助手","运维"],score:74,mvp:"1天",source:"",demo:""},
+  {id:53,track:"use",name:"团队投票工具",desc:"创建投票、分享链接、实时计数，适合小团队决策。",tags:["投票","实时计数","分享"],score:73,mvp:"1天",source:"",demo:""},
+  {id:54,track:"use",name:"Git 提交分析",desc:"可视化 Git 提交历史，分析代码贡献和热点文件。",tags:["Git 分析","可视化","统计"],score:72,mvp:"1天",source:"",demo:""},
+  {id:55,track:"use",name:"AI 写作润色",desc:"粘贴文章，AI 润色语法、优化表达、调整风格。",tags:["AI 润色","语法","风格"],score:71,mvp:"1天",source:"",demo:""},
+  {id:56,track:"use",name:"图片压缩工具",desc:"批量压缩图片，支持 WebP/AVIF 转换，拖拽上传。",tags:["图片压缩","批量","格式转换"],score:70,mvp:"半天",source:"",demo:""},
+  {id:57,track:"use",name:"在线 Markdown 预览",desc:"实时预览 Markdown，支持导出 HTML/PDF，暗黑模式。",tags:["Markdown","预览","导出"],score:69,mvp:"半天",source:"",demo:""},
+  {id:58,track:"use",name:"环境变量管理",desc:"可视化管理 .env 文件，支持多环境切换和加密。",tags:["环境变量","多环境","加密"],score:68,mvp:"1天",source:"",demo:""},
+  {id:59,track:"use",name:"AI 代码解释器",desc:"粘贴代码，AI 逐行解释，支持多种编程语言。",tags:["代码解释","AI","多语言"],score:67,mvp:"1天",source:"",demo:""},
+  {id:60,track:"use",name:"个人主页生成器",desc:"输入信息自动生成漂亮的个人主页，支持自定义主题。",tags:["个人主页","模板","自动"],score:66,mvp:"1天",source:"",demo:""},
 
   // 好搓 HARDWARE (30)
-  {id:61,track:"hw",name:"ESP32 气象站",desc:"温湿度+气压+空气质量，OLED 显示，WiFi 上传数据到网页。",tags:["ESP32","气象","WiFi"],score:95,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:62,track:"hw",name:"树莓派智能镜子",desc:"镜子上显示天气、日程、新闻，魔镜项目入门经典。",tags:["树莓派","智能镜子","信息"],score:94,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:63,track:"hw",name:"Arduino 遥控小车",desc:"手机蓝牙控制小车，支持摄像头图传，机械入门首选。",tags:["Arduino","蓝牙","图传"],score:93,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:64,track:"hw",name:"ESP32 门铃 + 人脸通知",desc:"有人按门铃拍照识别，推送通知到手机。",tags:["ESP32","人脸识别","推送"],score:92,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:65,track:"hw",name:"树莓派 NAS 私有云",desc:"树莓派 + 硬盘 = 家庭私有云，支持 WebDAV 和自动备份。",tags:["树莓派","NAS","私有云"],score:91,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:66,track:"hw",name:"LED 矩阵显示屏",desc:"可编程 LED 矩阵，显示文字、动画、像素画。",tags:["LED","可编程","动画"],score:90,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:67,track:"hw",name:"ESP32 智能插座",desc:"手机远程控制家电开关，定时任务，用电统计。",tags:["ESP32","远程控制","智能"],score:89,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:68,track:"hw",name:"手势控制机械臂",desc:"用手势控制机械臂运动，传感器 + 舵机联动。",tags:["机械臂","手势","舵机"],score:88,mvp:"3-4天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:69,track:"hw",name:"树莓派复古游戏机",desc:"树莓派装 RetroPie，玩 NES/SNES/GBA 经典游戏。",tags:["树莓派","复古游戏","RetroPie"],score:87,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:70,track:"hw",name:"ESP32 电子墨水屏日历",desc:"电子墨水屏显示日历、天气、待办，超低功耗。",tags:["电子墨水","低功耗","日历"],score:86,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:71,track:"hw",name:"智能花盆监测",desc:"土壤湿度+光照+温度，自动浇水提醒，数据上云。",tags:["智能花盆","监测","浇水"],score:85,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:72,track:"hw",name:"DIY 键盘",desc:"自定义布局机械键盘，QMK 固件，键帽自己选。",tags:["DIY 键盘","QMK","自定义"],score:84,mvp:"4-5天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:73,track:"hw",name:"ESP32 空气质量监测",desc:"PM2.5+CO2+TVOC 实时监测，网页仪表盘展示。",tags:["空气质量","监测","仪表盘"],score:83,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:74,track:"hw",name:"树莓派安防摄像头",desc:"运动检测 + 录像 + 手机推送，替代商业安防。",tags:["树莓派","安防","运动检测"],score:82,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:75,track:"hw",name:"语音助手音箱",desc:"ESP32 + 麦克风 + 喇叭 = 自制语音助手，支持离线唤醒。",tags:["语音助手","离线","ESP32"],score:81,mvp:"3-4天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:76,track:"hw",name:"LED 时钟",desc:"七段数码管时钟，NTP 同步，支持亮度自动调节。",tags:["LED 时钟","NTP","数码管"],score:80,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:77,track:"hw",name:"ESP32 蓝牙音箱",desc:"DIY 蓝牙音箱，3D 打印外壳，音质不输百元级。",tags:["蓝牙音箱","3D 打印","音频"],score:79,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:78,track:"hw",name:"智能喂鱼器",desc:"定时喂鱼 + 远程控制 + 鱼缸温度监测。",tags:["智能喂鱼","定时","温度"],score:78,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:79,track:"hw",name:"树莓派广告屏",desc:"轮播图片/视频的广告屏，网页后台管理内容。",tags:["广告屏","内容管理","树莓派"],score:77,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:80,track:"hw",name:"ESP32 GPS 追踪器",desc:"实时位置追踪，地图展示，适合宠物/背包/自行车。",tags:["GPS","位置追踪","地图"],score:76,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:81,track:"hw",name:"智能门锁",desc:"指纹/NFC/手机蓝牙开锁，开锁记录可查。",tags:["智能门锁","NFC","指纹"],score:75,mvp:"3-4天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:82,track:"hw",name:"ESP32 噪音监测",desc:"环境噪音实时监测，超标自动报警，数据可视化。",tags:["噪音监测","报警","可视化"],score:74,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:83,track:"hw",name:"树莓派打印服务器",desc:"USB 打印机变网络打印机，支持 AirPrint。",tags:["打印服务器","网络打印","AirPrint"],score:73,mvp:"1天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:84,track:"hw",name:"电子货架标签",desc:"电子墨水屏显示商品价格，后台批量更新。",tags:["电子墨水","货架标签","批量"],score:72,mvp:"2-3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:85,track:"hw",name:"ESP32 智能晾衣架",desc:"下雨自动收衣，晴天自动伸出，温湿度传感器控制。",tags:["智能晾衣","自动","传感器"],score:71,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:86,track:"hw",name:"DIY 示波器",desc:"ESP32 采集信号，网页端显示波形，入门级示波器。",tags:["示波器","信号采集","波形"],score:70,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:87,track:"hw",name:"智能体重秤",desc:"称重+体脂+WiFi 上传，历史数据趋势图。",tags:["体重秤","体脂","趋势"],score:69,mvp:"3天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:88,track:"hw",name:"ESP32 植物生长灯",desc:"根据植物需求自动调节光照时间和光谱。",tags:["生长灯","自动调节","光谱"],score:68,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:89,track:"hw",name:"树莓派收音机",desc:"网络收音机，触摸屏选台，支持全球电台。",tags:["网络收音机","触摸屏","全球"],score:67,mvp:"2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""},
-  {id:90,track:"hw",name:"ESP32 烟雾报警",desc:"烟雾+火焰检测，声光报警+手机推送，家庭安全。",tags:["烟雾报警","火焰检测","安全"],score:66,mvp:"1-2天",source:"https://github.com/nicolo-ribaudo/tc39-proposal-signals",demo:""}
+  {id:61,track:"hw",name:"ESP32 气象站",desc:"温湿度+气压+空气质量，OLED 显示，WiFi 上传数据到网页。",tags:["ESP32","气象","WiFi"],score:95,mvp:"2天",source:"",demo:""},
+  {id:62,track:"hw",name:"树莓派智能镜子",desc:"镜子上显示天气、日程、新闻，魔镜项目入门经典。",tags:["树莓派","智能镜子","信息"],score:94,mvp:"3天",source:"",demo:""},
+  {id:63,track:"hw",name:"Arduino 遥控小车",desc:"手机蓝牙控制小车，支持摄像头图传，机械入门首选。",tags:["Arduino","蓝牙","图传"],score:93,mvp:"2天",source:"",demo:""},
+  {id:64,track:"hw",name:"ESP32 门铃 + 人脸通知",desc:"有人按门铃拍照识别，推送通知到手机。",tags:["ESP32","人脸识别","推送"],score:92,mvp:"3天",source:"",demo:""},
+  {id:65,track:"hw",name:"树莓派 NAS 私有云",desc:"树莓派 + 硬盘 = 家庭私有云，支持 WebDAV 和自动备份。",tags:["树莓派","NAS","私有云"],score:91,mvp:"3天",source:"",demo:""},
+  {id:66,track:"hw",name:"LED 矩阵显示屏",desc:"可编程 LED 矩阵，显示文字、动画、像素画。",tags:["LED","可编程","动画"],score:90,mvp:"1-2天",source:"",demo:""},
+  {id:67,track:"hw",name:"ESP32 智能插座",desc:"手机远程控制家电开关，定时任务，用电统计。",tags:["ESP32","远程控制","智能"],score:89,mvp:"2天",source:"",demo:""},
+  {id:68,track:"hw",name:"手势控制机械臂",desc:"用手势控制机械臂运动，传感器 + 舵机联动。",tags:["机械臂","手势","舵机"],score:88,mvp:"3-4天",source:"",demo:""},
+  {id:69,track:"hw",name:"树莓派复古游戏机",desc:"树莓派装 RetroPie，玩 NES/SNES/GBA 经典游戏。",tags:["树莓派","复古游戏","RetroPie"],score:87,mvp:"1天",source:"",demo:""},
+  {id:70,track:"hw",name:"ESP32 电子墨水屏日历",desc:"电子墨水屏显示日历、天气、待办，超低功耗。",tags:["电子墨水","低功耗","日历"],score:86,mvp:"2天",source:"",demo:""},
+  {id:71,track:"hw",name:"智能花盆监测",desc:"土壤湿度+光照+温度，自动浇水提醒，数据上云。",tags:["智能花盆","监测","浇水"],score:85,mvp:"2天",source:"",demo:""},
+  {id:72,track:"hw",name:"DIY 键盘",desc:"自定义布局机械键盘，QMK 固件，键帽自己选。",tags:["DIY 键盘","QMK","自定义"],score:84,mvp:"4-5天",source:"",demo:""},
+  {id:73,track:"hw",name:"ESP32 空气质量监测",desc:"PM2.5+CO2+TVOC 实时监测，网页仪表盘展示。",tags:["空气质量","监测","仪表盘"],score:83,mvp:"2天",source:"",demo:""},
+  {id:74,track:"hw",name:"树莓派安防摄像头",desc:"运动检测 + 录像 + 手机推送，替代商业安防。",tags:["树莓派","安防","运动检测"],score:82,mvp:"2-3天",source:"",demo:""},
+  {id:75,track:"hw",name:"语音助手音箱",desc:"ESP32 + 麦克风 + 喇叭 = 自制语音助手，支持离线唤醒。",tags:["语音助手","离线","ESP32"],score:81,mvp:"3-4天",source:"",demo:""},
+  {id:76,track:"hw",name:"LED 时钟",desc:"七段数码管时钟，NTP 同步，支持亮度自动调节。",tags:["LED 时钟","NTP","数码管"],score:80,mvp:"1天",source:"",demo:""},
+  {id:77,track:"hw",name:"ESP32 蓝牙音箱",desc:"DIY 蓝牙音箱，3D 打印外壳，音质不输百元级。",tags:["蓝牙音箱","3D 打印","音频"],score:79,mvp:"3天",source:"",demo:""},
+  {id:78,track:"hw",name:"智能喂鱼器",desc:"定时喂鱼 + 远程控制 + 鱼缸温度监测。",tags:["智能喂鱼","定时","温度"],score:78,mvp:"2天",source:"",demo:""},
+  {id:79,track:"hw",name:"树莓派广告屏",desc:"轮播图片/视频的广告屏，网页后台管理内容。",tags:["广告屏","内容管理","树莓派"],score:77,mvp:"2天",source:"",demo:""},
+  {id:80,track:"hw",name:"ESP32 GPS 追踪器",desc:"实时位置追踪，地图展示，适合宠物/背包/自行车。",tags:["GPS","位置追踪","地图"],score:76,mvp:"2天",source:"",demo:""},
+  {id:81,track:"hw",name:"智能门锁",desc:"指纹/NFC/手机蓝牙开锁，开锁记录可查。",tags:["智能门锁","NFC","指纹"],score:75,mvp:"3-4天",source:"",demo:""},
+  {id:82,track:"hw",name:"ESP32 噪音监测",desc:"环境噪音实时监测，超标自动报警，数据可视化。",tags:["噪音监测","报警","可视化"],score:74,mvp:"1天",source:"",demo:""},
+  {id:83,track:"hw",name:"树莓派打印服务器",desc:"USB 打印机变网络打印机，支持 AirPrint。",tags:["打印服务器","网络打印","AirPrint"],score:73,mvp:"1天",source:"",demo:""},
+  {id:84,track:"hw",name:"电子货架标签",desc:"电子墨水屏显示商品价格，后台批量更新。",tags:["电子墨水","货架标签","批量"],score:72,mvp:"2-3天",source:"",demo:""},
+  {id:85,track:"hw",name:"ESP32 智能晾衣架",desc:"下雨自动收衣，晴天自动伸出，温湿度传感器控制。",tags:["智能晾衣","自动","传感器"],score:71,mvp:"3天",source:"",demo:""},
+  {id:86,track:"hw",name:"DIY 示波器",desc:"ESP32 采集信号，网页端显示波形，入门级示波器。",tags:["示波器","信号采集","波形"],score:70,mvp:"2天",source:"",demo:""},
+  {id:87,track:"hw",name:"智能体重秤",desc:"称重+体脂+WiFi 上传，历史数据趋势图。",tags:["体重秤","体脂","趋势"],score:69,mvp:"3天",source:"",demo:""},
+  {id:88,track:"hw",name:"ESP32 植物生长灯",desc:"根据植物需求自动调节光照时间和光谱。",tags:["生长灯","自动调节","光谱"],score:68,mvp:"2天",source:"",demo:""},
+  {id:89,track:"hw",name:"树莓派收音机",desc:"网络收音机，触摸屏选台，支持全球电台。",tags:["网络收音机","触摸屏","全球"],score:67,mvp:"2天",source:"",demo:""},
+  {id:90,track:"hw",name:"ESP32 烟雾报警",desc:"烟雾+火焰检测，声光报警+手机推送，家庭安全。",tags:["烟雾报警","火焰检测","安全"],score:66,mvp:"1-2天",source:"",demo:""}
 ];
 
 const STARS = [
@@ -549,7 +576,7 @@ function renderBoard() {
     return;
   }
   grid.innerHTML = items.map(p => `
-    <div class="proj-card">
+    <div class="proj-card" onclick="openDetail(JSON.parse(this.dataset.p))" style="cursor:pointer" data-p='${JSON.stringify(p).replace(/'/g,"&#39;")}'>
       <div class="proj-head">
         <span class="proj-num">#${typeof p.id==='string'?p.id.slice(1):p.id}</span>
         <span class="rec-track ${tc[p.track]}">${tn[p.track]}</span>
@@ -559,7 +586,7 @@ function renderBoard() {
       <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
       <div class="proj-bottom">
         <span class="proj-score">${p.stars?p.stars:'⭐ '+p.score+' · MVP '+p.mvp}</span>
-        <div class="proj-links">
+        <div class="proj-links" onclick="event.stopPropagation()">
           ${p.source&&p.source.includes('github.com')?`<a class="proj-link" href="${p.source}" target="_blank">源码</a>`:''}
           ${p.demo?`<a class="proj-link" href="${p.demo}" target="_blank">演示</a>`:''}
           ${p.track!=='star'?`<button class="proj-link" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">开工提示词</button>`:''}
@@ -598,6 +625,58 @@ function copyPrompt(name) {
     showToast('✅ 开工提示词已复制！');
   });
 }
+
+function openDetail(p) {
+  const tn = {play:"好玩",use:"好用",hw:"好搓"};
+  document.getElementById('detailTitle').textContent = p.name;
+  document.getElementById('detailDesc').textContent = p.desc;
+  document.getElementById('detailMeta').innerHTML = `
+    <span class="meta-item">⭐ ${p.score} 分</span>
+    <span class="meta-item">⏱ MVP ${p.mvp}</span>
+    <span class="meta-item">${tn[p.track]||p.track}</span>
+  `;
+  document.getElementById('detailTags').innerHTML = p.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('');
+  document.getElementById('detailPrompt').textContent = `我想做一个叫"${p.name}"的 Vibe Coding 项目。请帮我：\n1. 分析这个项目的核心功能\n2. 选择合适的技术栈\n3. 制定 MVP 开发计划\n4. 给出开工的第一步`;
+  let actions = `<button class="btn-sm" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">📋 复制开工提示词</button>`;
+  if (p.source) actions += `<a class="btn-sm" href="${p.source}" target="_blank">📦 源码</a>`;
+  if (p.demo) actions += `<a class="btn-sm" href="${p.demo}" target="_blank">🎮 演示</a>`;
+  document.getElementById('detailActions').innerHTML = actions;
+  document.getElementById('detailOverlay').classList.add('open');
+  document.getElementById('detailPanel').classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+// GitHub Stars fetch (free, no auth needed, 60 req/hour)
+async function fetchStars() {
+  const repos = PROJECTS.filter(p => p.source && p.source.includes('github.com')).map(p => {
+    const m = p.source.match(/github\.com\/([^/]+\/[^/]+)/);
+    return m ? {id: p.id, slug: m[1]} : null;
+  }).filter(Boolean);
+
+  // Only fetch a few to stay under rate limit
+  const batch = repos.slice(0, 10);
+  for (const r of batch) {
+    try {
+      const resp = await fetch(`https://api.github.com/repos/${r.slug}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        // Update star count in UI
+        document.querySelectorAll(`[data-pid="${r.id}"] .star-badge`).forEach(el => {
+          el.textContent = `⭐ ${data.stargazers_count.toLocaleString()}`;
+        });
+      }
+    } catch(e) {}
+  }
+}
+
+// Load stars after page loads
+setTimeout(fetchStars, 2000);
 
 init();
 // PWA Service Worker
