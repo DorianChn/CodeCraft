@@ -8,6 +8,10 @@
 <meta property="og:title" content="CodeCraft - AI 项目灵感雷达">
 <meta property="og:description" content="90 个精选开源项目，帮你从零开始 Vibe Coding">
 <meta property="og:type" content="website">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6c5ce7">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>CodeCraft - AI 项目灵感雷达</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -596,6 +600,10 @@ function copyPrompt(name) {
 }
 
 init();
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
