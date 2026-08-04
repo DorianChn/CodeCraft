@@ -151,6 +151,23 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
 .empty .icon{font-size:3rem;margin-bottom:12px}
 .empty p{font-size:.9rem}
 
+/* FAVORITE BUTTON */
+.fav-btn{background:none;border:none;font-size:1.1rem;cursor:pointer;padding:2px 6px;transition:.2s;opacity:.5}
+.fav-btn:hover,.fav-btn.active{opacity:1;transform:scale(1.2)}
+.fav-btn.active{filter:drop-shadow(0 0 4px rgba(253,203,110,.5))}
+
+/* SORT BAR */
+.sort-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sort-select{padding:8px 14px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.82rem;cursor:pointer;outline:none}
+.sort-select:focus{border-color:var(--accent)}
+
+/* SEARCH HIGHLIGHT */
+mark{background:rgba(108,92,231,.3);color:#fff;border-radius:2px;padding:0 2px}
+
+/* PROMPT EDITOR */
+.prompt-editor{width:100%;min-height:120px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:.82rem;color:var(--text);font-family:inherit;line-height:1.6;resize:vertical;outline:none}
+.prompt-editor:focus{border-color:var(--accent)}
+
 /* TOAST */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--accent);color:#fff;padding:12px 24px;border-radius:24px;font-size:.85rem;font-weight:600;z-index:1000;transition:.4s;opacity:0;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -272,6 +289,14 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
   <div class="board-header">
     <h2>📋 全部项目</h2>
     <div class="board-tabs" id="boardTabs"></div>
+    <div class="sort-bar">
+      <select class="sort-select" id="sortSelect">
+        <option value="default">默认排序</option>
+        <option value="score">按评分</option>
+        <option value="mvp">按 MVP 时间</option>
+        <option value="name">按名称</option>
+      </select>
+    </div>
     <input class="board-search" id="boardSearch" placeholder="🔍 搜索项目名、标签..." />
   </div>
   <div class="board-grid" id="boardGrid"></div>
@@ -296,8 +321,8 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
   <div class="desc" id="detailDesc"></div>
   <div class="meta" id="detailMeta"></div>
   <div class="rec-tags" id="detailTags"></div>
-  <h3 style="font-size:.9rem;margin:16px 0 8px">📋 开工提示词</h3>
-  <div class="prompt-box" id="detailPrompt"></div>
+  <h3 style="font-size:.9rem;margin:16px 0 8px">📋 开工提示词（可编辑）</h3>
+  <textarea class="prompt-editor" id="detailPrompt"></textarea>
   <div class="rec-actions" id="detailActions"></div>
 </div>
 
@@ -335,7 +360,7 @@ const PROJECTS = [
   {id:25,track:"play",name:"像素鸟 AI 训练",desc:"看着 AI 自己学会玩像素鸟，强化学习可视化。",tags:["强化学习","游戏 AI","可视化"],score:67,mvp:"1-2天",source:"https://github.com/guilhermecff/Flappy-Bird-AI",demo:""},
   {id:26,track:"play",name:"音乐节奏游戏",desc:"自动生成谱面的音游，支持自定义音乐，浏览器直接玩。",tags:["音游","谱面生成","音乐"],score:66,mvp:"2-3天",source:"",demo:""},
   {id:27,track:"play",name:"AI 宠物养成",desc:"养一只 AI 宠物，它会学习你的习惯，做出不同反应。",tags:["AI 宠物","习惯学习","养成"],score:65,mvp:"2天",source:"",demo:""},
-  {id:28,track:"play",name:"全息投影效果",desc:"CSS 实现的全息投影视觉效果，科幻感拉满。",tags:["全息效果","CSS 3D","科幻"],score:64,mvp:"半天",source:"",demo:""},
+  {id:28,track:"play",name:"全息投影效果",desc:"CSS 实现的全息投影视觉效果，科幻感拉满。",tags:["全息效果","CSS 3D","科幻"],score:64,mvp:"半天",source:"https://github.com/floguo/holographic",demo:""},
   {id:29,track:"play",name:"实时聊天室",desc:"匿名聊天室 + 表情包 + 在线人数，WebSocket 全栈项目。",tags:["匿名聊天","WebSocket","全栈"],score:63,mvp:"1天",source:"",demo:""},
   {id:30,track:"play",name:"AI 绘本生成器",desc:"输入故事主题，AI 生成图文并茂的儿童绘本 PDF。",tags:["AI 绘本","图文","PDF"],score:62,mvp:"1-2天",source:"",demo:""},
 
@@ -345,7 +370,7 @@ const PROJECTS = [
   {id:33,track:"use",name:"AI 简历生成器",desc:"输入经历，AI 排版生成专业简历，支持多种模板导出 PDF。",tags:["简历","AI 排版","PDF"],score:93,mvp:"1天",source:"https://github.com/Sagar-rolex/AI-ResumeBuilder",demo:""},
   {id:34,track:"use",name:"Markdown 笔记 + AI 总结",desc:"所见即所得 Markdown 编辑器，AI 帮你总结和提炼要点。",tags:["Markdown","AI 总结","笔记"],score:92,mvp:"2天",source:"https://github.com/brufdev/many-notes",demo:""},
   {id:35,track:"use",name:"番茄钟 + 专注统计",desc:"番茄工作法 + 专注时间统计 + 白噪音，养成专注习惯。",tags:["番茄钟","专注","白噪音"],score:91,mvp:"1天",source:"https://github.com/AzizFauzi/pomodoro-timer",demo:""},
-  {id:36,track:"use",name:"AI 翻译 + 术语表",desc:"支持专业领域术语表的翻译工具，比 Google 翻译更精准。",tags:["AI 翻译","术语表","专业"],score:90,mvp:"1-2天",source:"",demo:""},
+  {id:36,track:"use",name:"AI 翻译 + 术语表",desc:"支持专业领域术语表的翻译工具，比 Google 翻译更精准。",tags:["AI 翻译","术语表","专业"],score:90,mvp:"1-2天",source:"https://github.com/LibreTranslate/LibreTranslate",demo:""},
   {id:37,track:"use",name:"密码管理器",desc:"本地加密密码管理器，支持生成强密码和自动填充。",tags:["密码管理","本地加密","安全"],score:89,mvp:"2-3天",source:"https://github.com/Shakil-shift/Password-Manager",demo:""},
   {id:38,track:"use",name:"AI 邮件助手",desc:"帮你写邮件、总结收件箱、自动分类，邮箱效率翻倍。",tags:["AI 邮件","收件箱","分类"],score:88,mvp:"2天",source:"",demo:""},
   {id:39,track:"use",name:"文件批量重命名",desc:"拖拽文件，用正则或 AI 模式批量重命名，支持预览。",tags:["批量重命名","正则","拖拽"],score:87,mvp:"半天",source:"",demo:""},
@@ -354,7 +379,7 @@ const PROJECTS = [
   {id:42,track:"use",name:"知识库搜索",desc:"本地文档向量化，支持语义搜索，替代 Ctrl+F。",tags:["向量搜索","本地文档","语义"],score:84,mvp:"2天",source:"",demo:""},
   {id:43,track:"use",name:"AI 代码审查助手",desc:"提交代码自动审查，指出潜在问题和优化建议。",tags:["代码审查","AI 分析","自动化"],score:83,mvp:"2天",source:"",demo:""},
   {id:44,track:"use",name:"网页截图 + 标注",desc:"输入 URL 自动截图，支持标注、箭头、文字叠加。",tags:["截图","标注","URL"],score:82,mvp:"1天",source:"",demo:""},
-  {id:45,track:"use",name:"API 文档生成器",desc:"从代码注释自动生成漂亮的 API 文档，支持 OpenAPI。",tags:["API 文档","自动生成","OpenAPI"],score:81,mvp:"1-2天",source:"",demo:""},
+  {id:45,track:"use",name:"API 文档生成器",desc:"从代码注释自动生成漂亮的 API 文档，支持 OpenAPI。",tags:["API 文档","自动生成","OpenAPI"],score:81,mvp:"1-2天",source:"https://github.com/preetham2224/AI-Code-Documentation-Generator",demo:""},
   {id:46,track:"use",name:"CSV 数据可视化",desc:"拖入 CSV 自动生成图表，支持折线、柱状、饼图。",tags:["CSV","可视化","拖拽"],score:80,mvp:"1天",source:"https://github.com/David0ludoyin/Data-Visualizer",demo:""},
   {id:47,track:"use",name:"正则表达式测试器",desc:"实时测试正则，高亮匹配结果，内置常用模板。",tags:["正则测试","实时","模板"],score:79,mvp:"半天",source:"",demo:""},
   {id:48,track:"use",name:"AI 会议纪要",desc:"上传录音，AI 自动生成会议纪要、待办事项和摘要。",tags:["会议纪要","语音转文字","AI"],score:78,mvp:"2天",source:"",demo:""},
@@ -363,11 +388,11 @@ const PROJECTS = [
   {id:51,track:"use",name:"JSON 格式化工具",desc:"在线 JSON 格式化、压缩、对比、转换，开发者必备。",tags:["JSON","格式化","对比"],score:75,mvp:"半天",source:"https://github.com/soumendrak/json-pretty",demo:""},
   {id:52,track:"use",name:"AI 配置文件助手",desc:"自然语言描述需求，AI 生成 Nginx/Docker 等配置。",tags:["配置生成","AI 助手","运维"],score:74,mvp:"1天",source:"",demo:""},
   {id:53,track:"use",name:"团队投票工具",desc:"创建投票、分享链接、实时计数，适合小团队决策。",tags:["投票","实时计数","分享"],score:73,mvp:"1天",source:"",demo:""},
-  {id:54,track:"use",name:"Git 提交分析",desc:"可视化 Git 提交历史，分析代码贡献和热点文件。",tags:["Git 分析","可视化","统计"],score:72,mvp:"1天",source:"",demo:""},
+  {id:54,track:"use",name:"Git 提交分析",desc:"可视化 Git 提交历史，分析代码贡献和热点文件。",tags:["Git 分析","可视化","统计"],score:72,mvp:"1天",source:"https://github.com/ably-labs/github-commit-visualizer",demo:""},
   {id:55,track:"use",name:"AI 写作润色",desc:"粘贴文章，AI 润色语法、优化表达、调整风格。",tags:["AI 润色","语法","风格"],score:71,mvp:"1天",source:"",demo:""},
   {id:56,track:"use",name:"图片压缩工具",desc:"批量压缩图片，支持 WebP/AVIF 转换，拖拽上传。",tags:["图片压缩","批量","格式转换"],score:70,mvp:"半天",source:"https://github.com/Donaldcwl/browser-image-compression",demo:""},
   {id:57,track:"use",name:"在线 Markdown 预览",desc:"实时预览 Markdown，支持导出 HTML/PDF，暗黑模式。",tags:["Markdown","预览","导出"],score:69,mvp:"半天",source:"https://github.com/pandao/editor.md",demo:""},
-  {id:58,track:"use",name:"环境变量管理",desc:"可视化管理 .env 文件，支持多环境切换和加密。",tags:["环境变量","多环境","加密"],score:68,mvp:"1天",source:"",demo:""},
+  {id:58,track:"use",name:"环境变量管理",desc:"可视化管理 .env 文件，支持多环境切换和加密。",tags:["环境变量","多环境","加密"],score:68,mvp:"1天",source:"https://github.com/motdotla/dotenv",demo:""},
   {id:59,track:"use",name:"AI 代码解释器",desc:"粘贴代码，AI 逐行解释，支持多种编程语言。",tags:["代码解释","AI","多语言"],score:67,mvp:"1天",source:"",demo:""},
   {id:60,track:"use",name:"个人主页生成器",desc:"输入信息自动生成漂亮的个人主页，支持自定义主题。",tags:["个人主页","模板","自动"],score:66,mvp:"1天",source:"",demo:""},
 
@@ -405,12 +430,12 @@ const PROJECTS = [
 ];
 
 const STARS = [
-  {rank:1,name:"usestrix/strix",stars:"+10,759/周",desc:"开源 AI 渗透测试工具，帮你找出应用漏洞并给出修复建议。",tags:["AI 安全","漏洞修复"],url:"https://github.com/usestrix/strix"},
-  {rank:2,name:"msitarzewski/agency-agents",stars:"+9,706/周",desc:"一整套 AI Agency 角色库，适合给 Codex 配团队。",tags:["Agent 团队","角色库"],url:"https://github.com/msitarzewski/agency-agents"},
-  {rank:3,name:"JuliusBrussee/caveman",stars:"+7,780/周",desc:"Claude Code Skill，用极简表达压缩上下文，减少 token 消耗。",tags:["省 Token","Claude Skill"],url:"https://github.com/JuliusBrussee/caveman"},
-  {rank:4,name:"DeusData/codebase-memory-mcp",stars:"+6,309/周",desc:"高性能代码智能 MCP，把代码库索引成持久知识图谱。",tags:["代码库记忆","MCP 索引"],url:"https://github.com/DeusData/codebase-memory-mcp"},
-  {rank:5,name:"Zackriya-Solutions/meetily",stars:"+5,769/周",desc:"本地优先 AI 会议助手，支持实时转写和本地 Ollama 总结。",tags:["会议助手","实时转写"],url:"https://github.com/Zackriya-Solutions/meetily"},
-  {rank:6,name:"hasaneyldrm/exercises-dataset",stars:"+5,665/周",desc:"433 个健身动作数据集，含肌群、器械、说明和视频。",tags:["健身数据集","动作筛选"],url:"https://github.com/hasaneyldrm/exercises-dataset"}
+  {rank:1,name:"openclaw/openclaw","stars":"+385,124/周","desc":"Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ","tags":["TypeScript","ai","assistant"],url:"https://github.com/openclaw/openclaw"},
+  {rank:2,name:"affaan-m/ECC","stars":"+237,649/周","desc":"The agent harness performance optimization system. Skills, instincts, memory, se","tags":["JavaScript","ai-agents","anthropic"],url:"https://github.com/affaan-m/ECC"},
+  {rank:3,name:"NousResearch/hermes-agent","stars":"+225,414/周","desc":"The agent that grows with you","tags":["Python","ai","ai-agent"],url:"https://github.com/NousResearch/hermes-agent"},
+  {rank:4,name:"anthropics/skills","stars":"+166,225/周","desc":"Public repository for Agent Skills","tags":["Python","agent-skills"],url:"https://github.com/anthropics/skills"},
+  {rank:5,name:"garrytan/gstack","stars":"+126,252/周","desc":"Use Garry Tan's exact Claude Code setup: 23 opinionated tools that serve as CEO,","tags":["TypeScript"],url:"https://github.com/garrytan/gstack"},
+  {rank:6,name:"github/spec-kit","stars":"+125,295/周","desc":"💫 Toolkit to help you get started with Spec-Driven Development","tags":["Python","ai","copilot"],url:"https://github.com/github/spec-kit"},
 ];
 
 const PICKER_OPTIONS = {
@@ -444,8 +469,30 @@ const PICKER_OPTIONS = {
 const state = {
   selections: {time:"weekend",goal:"demo",form:"web",comfort:"newbie"},
   boardFilter: "all",
-  boardSearch: ""
+  boardSearch: "",
+  sortBy: "default",
+  favorites: []
 };
+
+// Load favorites from localStorage
+try { state.favorites = JSON.parse(localStorage.getItem('codecraft_favs') || '[]'); } catch(e) { state.favorites = []; }
+
+function toggleFav(pid) {
+  const idx = state.favorites.indexOf(pid);
+  if (idx === -1) state.favorites.push(pid);
+  else state.favorites.splice(idx, 1);
+  try { localStorage.setItem('codecraft_favs', JSON.stringify(state.favorites)); } catch(e) {}
+  renderBoard();
+  showToast(idx === -1 ? '⭐ 已收藏' : '取消收藏');
+}
+
+function isFav(pid) { return state.favorites.includes(pid); }
+
+function highlightText(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
 
 // ============ RENDER ============
 function init() {
@@ -563,7 +610,7 @@ function renderStars() {
 }
 
 function renderBoardTabs() {
-  const tabs = [{id:"all",label:"全部"},{id:"play",label:"好玩"},{id:"use",label:"好用"},{id:"hw",label:"好搓"},{id:"star",label:"明星"}];
+  const tabs = [{id:"all",label:"全部"},{id:"play",label:"好玩"},{id:"use",label:"好用"},{id:"hw",label:"好搓"},{id:"star",label:"明星"},{id:"fav",label:"⭐ 收藏"}];
   document.getElementById('boardTabs').innerHTML = tabs.map(t =>
     `<button class="board-tab ${state.boardFilter===t.id?'active':''}" data-filter="${t.id}">${t.label}</button>`
   ).join('');
@@ -573,16 +620,27 @@ function renderBoard() {
   let items = state.boardFilter === 'star' ? STARS.map(s => ({
     id:'s'+s.rank,track:'star',name:s.name,desc:s.desc,tags:s.tags,score:0,mvp:'',source:s.url,demo:'',stars:s.stars
   })) : [...PROJECTS];
-  if (state.boardFilter!=='all'&&state.boardFilter!=='star') items = items.filter(p=>p.track===state.boardFilter);
+  if (state.boardFilter==='fav') items = items.filter(p=>isFav(p.id));
+  else if (state.boardFilter!=='all'&&state.boardFilter!=='star') items = items.filter(p=>p.track===state.boardFilter);
   if (state.boardSearch) {
     const q = state.boardSearch.toLowerCase();
     items = items.filter(p=>p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)||p.tags.some(t=>t.toLowerCase().includes(q)));
   }
+  // Sorting
+  const sort = state.sortBy;
+  if (sort==='score') items.sort((a,b)=>(b.score||0)-(a.score||0));
+  else if (sort==='mvp') {
+    const mvpMin = s => { const m=s.match(/\d+/); return m?parseInt(m[0]):999; };
+    items.sort((a,b)=>mvpMin(a.mvp)-mvpMin(b.mvp));
+  }
+  else if (sort==='name') items.sort((a,b)=>a.name.localeCompare(b.name,'zh'));
+  const q = state.boardSearch;
   const tn = {play:"好玩",use:"好用",hw:"好搓",star:"明星"};
   const tc = {play:"track-play",use:"track-use",hw:"track-hw",star:"track-star"};
   const grid = document.getElementById('boardGrid');
   if (!items.length) {
-    grid.innerHTML = '<div class="empty"><div class="icon">🔍</div><p>没有找到匹配的项目，换个关键词试试？</p></div>';
+    const msg = state.boardFilter==='fav'?'还没有收藏项目，点击卡片上的 ⭐ 收藏':'没有找到匹配的项目，换个关键词试试？';
+    grid.innerHTML = `<div class="empty"><div class="icon">${state.boardFilter==='fav'?'⭐':'🔍'}</div><p>${msg}</p></div>`;
     return;
   }
   grid.innerHTML = items.map(p => `
@@ -590,10 +648,11 @@ function renderBoard() {
       <div class="proj-head">
         <span class="proj-num">#${typeof p.id==='string'?p.id.slice(1):p.id}</span>
         <span class="rec-track ${tc[p.track]}">${tn[p.track]}</span>
-        <h3>${p.name}</h3>
+        <h3>${highlightText(p.name, q)}</h3>
+        ${p.track!=='star'?`<button class="fav-btn ${isFav(p.id)?'active':''}" onclick="event.stopPropagation();toggleFav(${p.id})">${isFav(p.id)?'⭐':'☆'}</button>`:''}
       </div>
-      <p>${p.desc}</p>
-      <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
+      <p>${highlightText(p.desc, q)}</p>
+      <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${highlightText(t, q)}</span>`).join('')}</div>
       <div class="proj-bottom">
         <span class="proj-score">${p.stars?p.stars:'⭐ '+p.score+' · MVP '+p.mvp}</span>
         <div class="proj-links" onclick="event.stopPropagation()">
@@ -625,6 +684,10 @@ function setupEvents() {
     state.boardSearch = e.target.value;
     renderBoard();
   });
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    state.sortBy = e.target.value;
+    renderBoard();
+  });
 }
 
 function copyPrompt(name) {
@@ -653,6 +716,15 @@ function copyPageLink() {
   });
 }
 
+function copyEditedPrompt() {
+  const text = document.getElementById('detailPrompt').value;
+  navigator.clipboard.writeText(text).then(() => showToast('✅ 提示词已复制！')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('✅ 提示词已复制！');
+  });
+}
+
 function openDetail(p) {
   const tn = {play:"好玩",use:"好用",hw:"好搓"};
   document.getElementById('detailTitle').textContent = p.name;
@@ -663,8 +735,8 @@ function openDetail(p) {
     <span class="meta-item">${tn[p.track]||p.track}</span>
   `;
   document.getElementById('detailTags').innerHTML = p.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('');
-  document.getElementById('detailPrompt').textContent = `我想做一个叫"${p.name}"的 Vibe Coding 项目。请帮我：\n1. 分析这个项目的核心功能\n2. 选择合适的技术栈\n3. 制定 MVP 开发计划\n4. 给出开工的第一步`;
-  let actions = `<button class="btn-sm" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">📋 复制开工提示词</button>`;
+  document.getElementById('detailPrompt').value = `我想做一个叫"${p.name}"的 Vibe Coding 项目。请帮我：\n1. 分析这个项目的核心功能\n2. 选择合适的技术栈\n3. 制定 MVP 开发计划\n4. 给出开工的第一步`;
+  let actions = `<button class="btn-sm" onclick="copyEditedPrompt()">📋 复制提示词</button>`;
   if (p.source) actions += `<a class="btn-sm" href="${p.source}" target="_blank">📦 源码</a>`;
   if (p.demo) actions += `<a class="btn-sm" href="${p.demo}" target="_blank">🎮 演示</a>`;
   document.getElementById('detailActions').innerHTML = actions;
