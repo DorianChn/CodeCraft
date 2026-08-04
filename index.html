@@ -43,7 +43,9 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
 .nav-links a:hover,.nav-links a.active{color:#fff;background:var(--accent);text-decoration:none}
 
 /* HERO */
-.hero{text-align:center;padding:100px 24px 50px;max-width:900px;margin:0 auto;animation:fadeInUp .8s ease}
+.hero{text-align:center;padding:100px 24px 50px;max-width:900px;margin:0 auto;animation:fadeInUp .8s ease;position:relative}
+.hero-canvas{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:900px;height:100%;pointer-events:none;z-index:0}
+.hero>*{position:relative;z-index:1}
 .hero-badge{display:inline-block;padding:6px 18px;border-radius:20px;background:rgba(108,92,231,.15);color:var(--accent);font-size:.8rem;font-weight:600;margin-bottom:16px;border:1px solid rgba(108,92,231,.3)}
 .hero h1{font-size:3.2rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,var(--play),var(--accent),var(--accent2));background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientShift 4s ease infinite;letter-spacing:-1px}
 .hero p{color:var(--dim);font-size:1.1rem;max-width:620px;margin:0 auto 36px;line-height:1.7}
@@ -132,8 +134,11 @@ a{color:var(--accent2);text-decoration:none;transition:.2s}a:hover{text-decorati
 .board-search{margin-left:auto;padding:10px 18px;border-radius:24px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.85rem;width:220px;outline:none;transition:.25s}
 .board-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,92,231,.15)}
 .board-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
-.proj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:.3s}
-.proj-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:.3s;position:relative;overflow:hidden}
+.proj-card::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,var(--accent),transparent,var(--accent2),transparent);opacity:0;transition:.5s;animation:rotateBorder 4s linear infinite;pointer-events:none}
+@keyframes rotateBorder{to{transform:rotate(360deg)}}
+.proj-card:hover::after{opacity:.15}
+.proj-card:hover{border-color:transparent;transform:translateY(-2px)}
 .proj-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .proj-num{font-size:.72rem;color:var(--dim);min-width:28px;font-weight:600}
 .proj-card h3{font-size:.92rem;font-weight:700;flex:1}
@@ -227,6 +232,7 @@ mark{background:rgba(108,92,231,.3);color:#fff;border-radius:2px;padding:0 2px}
 
 <!-- HERO -->
 <section class="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
   <div class="hero-badge">🚀 90 个精选开源项目</div>
   <h1>CodeCraft</h1>
   <p>工具装好了，不知道做什么？CodeCraft 从好玩、好用、好搓三个方向，帮你找到最适合开工的 Vibe Coding 项目。</p>
@@ -238,6 +244,12 @@ mark{background:rgba(108,92,231,.3);color:#fff;border-radius:2px;padding:0 2px}
 
 <!-- STATS -->
 <div class="stats anim" id="stats"></div>
+<div style="text-align:center;margin:-30px 0 30px;font-size:.78rem;color:var(--dim)">
+  <span style="display:inline-flex;align-items:center;gap:6px">
+    <span style="width:8px;height:8px;border-radius:50%;background:#2ecc71;display:inline-block;animation:pulse 2s ease infinite"></span>
+    <span id="onlineCount">127</span> 人正在探索项目
+  </span>
+</div>
 
 <!-- INTRO -->
 <section class="intro anim" id="intro">
@@ -504,6 +516,81 @@ function init() {
   renderBoard();
   setupEvents();
   setupScrollAnim();
+  initParticles();
+  animateCounters();
+}
+
+// Particle background
+function initParticles() {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const particles = [];
+  const count = 40;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 2 + 1,
+      a: Math.random() * 0.4 + 0.1
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(108,92,231,${p.a})`;
+      ctx.fill();
+      // Draw lines between nearby particles
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = `rgba(108,92,231,${0.1 * (1 - dist / 120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// Counter animation
+function animateCounters() {
+  document.querySelectorAll('.stat .num').forEach(el => {
+    const target = el.textContent;
+    const num = parseInt(target);
+    if (isNaN(num)) return;
+    let current = 0;
+    const step = Math.max(1, Math.floor(num / 40));
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= num) { current = num; clearInterval(timer); }
+      el.textContent = target.replace(String(num), String(current));
+    }, 30);
+  });
 }
 
 function showToast(msg) {
@@ -773,6 +860,15 @@ async function fetchStars() {
     } catch(e) {}
   }
 }
+
+// Online count fluctuation (simulated)
+setInterval(() => {
+  const el = document.getElementById('onlineCount');
+  if (!el) return;
+  const base = 120;
+  const variation = Math.floor(Math.random() * 30) - 10;
+  el.textContent = Math.max(80, base + variation);
+}, 5000);
 
 // Load stars after page loads
 setTimeout(fetchStars, 2000);
