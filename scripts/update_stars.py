@@ -9,7 +9,26 @@ import json
 import re
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+
+
+def github_request(url):
+    """Fetch GitHub API JSON, using the Actions token when available."""
+    headers = {
+        "User-Agent": "CodeCraft/1.1",
+        "Accept": "application/vnd.github+json",
+    }
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    if token and url.startswith("https://api.github.com/"):
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        return json.loads(resp.read())
+
+
+def recent_date(days=365):
+    """Return a moving GitHub search date instead of a stale hard-coded year."""
+    return (datetime.now(timezone.utc).date() - timedelta(days=days)).isoformat()
 
 def fetch_trending(language="", since="weekly"):
     """Fetch trending repos from GitHub unofficial API"""
@@ -17,14 +36,8 @@ def fetch_trending(language="", since="weekly"):
     if language:
         url += f"+language:{language}"
     
-    req = urllib.request.Request(url, headers={
-        "User-Agent": "CodeCraft/1.0",
-        "Accept": "application/vnd.github.v3+json"
-    })
-    
     try:
-        resp = urllib.request.urlopen(req, timeout=15)
-        data = json.loads(resp.read())
+        data = github_request(url)
         return data.get("items", [])
     except Exception as e:
         print(f"Error fetching trending: {e}")
@@ -33,22 +46,18 @@ def fetch_trending(language="", since="weekly"):
 def fetch_weekly_stars():
     """Get repos with most stars gained this week"""
     # Use GitHub search API to find recently created popular repos
+    created_after = recent_date()
     queries = [
-        "stars:>500+created:>2025-06-01+language:javascript",
-        "stars:>500+created:>2025-06-01+language:python",
-        "stars:>500+created:>2025-06-01+language:typescript",
+        f"stars:>500+created:>{created_after}+language:javascript",
+        f"stars:>500+created:>{created_after}+language:python",
+        f"stars:>500+created:>{created_after}+language:typescript",
     ]
     
     all_repos = []
     for q in queries:
         url = f"https://api.github.com/search/repositories?q={q}&sort=stars&order=desc&per_page=3"
-        req = urllib.request.Request(url, headers={
-            "User-Agent": "CodeCraft/1.0",
-            "Accept": "application/vnd.github.v3+json"
-        })
         try:
-            resp = urllib.request.urlopen(req, timeout=15)
-            data = json.loads(resp.read())
+            data = github_request(url)
             all_repos.extend(data.get("items", []))
         except Exception as e:
             print(f"Error: {e}")
@@ -105,7 +114,16 @@ def update_html(stars_data):
     stars_js = "const STARS = [\n"
     for s in stars_data:
         tags_str = ",".join(f'"{t}"' for t in s["tags"])
-        stars_js += '  {rank:' + str(s["rank"]) + ',name:"' + s["name"] + '","stars":"' + s["stars"] + '","desc":"' + s["desc"] + '","tags":[' + tags_str + '],url:"' + s["url"] + '"},\n'
+        stars_js += (
+            "  {"
+            f"rank:{s['rank']},"
+            f"name:{json.dumps(s['name'], ensure_ascii=False)},"
+            f"stars:{json.dumps(s['stars'], ensure_ascii=False)},"
+            f"desc:{json.dumps(s['desc'], ensure_ascii=False)},"
+            f"tags:{json.dumps(s['tags'], ensure_ascii=False)},"
+            f"url:{json.dumps(s['url'], ensure_ascii=False)}"
+            "},\n"
+        )
     stars_js += "];"
     
     # Replace old STARS
@@ -143,9 +161,9 @@ def main():
     
     # Try to auto-update HTML
     if update_html(stars_data):
-        print("\n✅ HTML updated successfully")
+        print("\n[ok] HTML updated successfully")
     else:
-        print("\n⚠️  Manual update needed - copy the JSON above")
+        print("\n[warning] Manual update needed - copy the JSON above")
 
 if __name__ == "__main__":
     main()
