@@ -31,8 +31,10 @@ def recent_date(days=365):
     return (datetime.now(timezone.utc).date() - timedelta(days=days)).isoformat()
 
 def fetch_trending(language="", since="weekly"):
-    """Fetch trending repos from GitHub unofficial API"""
-    url = f"https://api.github.com/search/repositories?q=stars:>100+pushed:>2025-01-01&sort=stars&order=desc&per_page=10"
+    """Fetch popular repositories updated in a moving time window."""
+    window_days = {"daily": 1, "weekly": 7, "monthly": 30}.get(str(since).lower(), 365)
+    pushed_after = recent_date(days=window_days)
+    url = f"https://api.github.com/search/repositories?q=stars:>100+pushed:>{pushed_after}&sort=stars&order=desc&per_page=10"
     if language:
         url += f"+language:{language}"
     
@@ -44,9 +46,14 @@ def fetch_trending(language="", since="weekly"):
         return []
 
 def fetch_weekly_stars():
-    """Get repos with most stars gained this week"""
-    # Use GitHub search API to find recently created popular repos
-    created_after = recent_date()
+    """Get recently created, popular repositories.
+
+    GitHub's repository search API returns total stars, not weekly star growth.
+    Keep the output honest by describing these as total-star counts rather than
+    claiming a growth rate the API did not provide.
+    """
+    # Use GitHub search API to find recently created popular repos.
+    created_after = recent_date(days=365)
     queries = [
         f"stars:>500+created:>{created_after}+language:javascript",
         f"stars:>500+created:>{created_after}+language:python",
@@ -90,7 +97,7 @@ def generate_stars_js(repos):
         stars.append({
             "rank": i,
             "name": name,
-            "stars": f"+{stars_count:,}/周",
+            "stars": f"{stars_count:,} stars",
             "desc": desc,
             "tags": tags,
             "url": r["html_url"]
@@ -149,7 +156,7 @@ def main():
         print("No repos found, exiting")
         sys.exit(1)
     
-    print(f"Found {len(repos)} trending repos:")
+    print(f"Found {len(repos)} recently created popular repos:")
     for r in repos:
         print(f"  ⭐ {r['stargazers_count']:>6} {r['full_name']}")
     
