@@ -318,11 +318,11 @@ mark{background:rgba(108,92,231,.3);color:#fff;border-radius:2px;padding:0 2px}
 <footer class="footer">
   <p>CodeCraft · AI 项目灵感雷达 · 纯静态 · 零费用 · 零维护</p>
   <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-    <a class="btn-sm" href="https://github.com/DorianChn/CodeCraft" target="_blank">⭐ GitHub</a>
+    <a class="btn-sm" href="https://github.com/DorianChn/CodeCraft" target="_blank" rel="noopener noreferrer">⭐ GitHub</a>
     <button class="btn-sm" onclick="shareToDouyin()">📱 分享到抖音</button>
     <button class="btn-sm" onclick="copyPageLink()">🔗 复制链接</button>
   </div>
-  <p style="margin-top:12px">Made with ❤️ by <a href="https://github.com/DorianChn" target="_blank">山川志</a></p>
+  <p style="margin-top:12px">Made with ❤️ by <a href="https://github.com/DorianChn" target="_blank" rel="noopener noreferrer">山川志</a></p>
 </footer>
 
 <!-- DETAIL OVERLAY -->
@@ -500,10 +500,42 @@ function toggleFav(pid) {
 
 function isFav(pid) { return state.favorites.includes(pid); }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function safeExternalUrl(value) {
+  try {
+    const url = new URL(String(value), window.location.href);
+    return ['http:', 'https:'].includes(url.protocol) ? escapeHtml(url.href) : '#';
+  } catch (e) {
+    return '#';
+  }
+}
+
 function highlightText(text, query) {
-  if (!query) return text;
-  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  return text.replace(re, '<mark>$1</mark>');
+  const raw = String(text);
+  if (!query) return escapeHtml(raw);
+  const re = new RegExp(escapeRegExp(query), 'gi');
+  let output = '';
+  let cursor = 0;
+  for (const match of raw.matchAll(re)) {
+    const index = match.index ?? 0;
+    output += escapeHtml(raw.slice(cursor, index));
+    output += `<mark>${escapeHtml(match[0])}</mark>`;
+    cursor = index + match[0].length;
+  }
+  return output + escapeHtml(raw.slice(cursor));
 }
 
 // ============ RENDER ============
@@ -674,8 +706,8 @@ function renderRecommendations() {
           <div class="rec-tags">${p.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('')}</div>
           <div class="rec-score">⭐ ${p.finalScore} 分 · MVP ${p.mvp}</div>
           <div class="rec-actions">
-            ${p.source&&p.source.includes('github.com')?`<a class="btn-sm" href="${p.source}" target="_blank">📦 源码</a>`:''}
-            ${p.demo?`<a class="btn-sm" href="${p.demo}" target="_blank">🎮 演示</a>`:''}
+            ${p.source&&p.source.includes('github.com')?`<a class="btn-sm" href="${safeExternalUrl(p.source)}" target="_blank" rel="noopener noreferrer">📦 源码</a>`:''}
+            ${p.demo?`<a class="btn-sm" href="${safeExternalUrl(p.demo)}" target="_blank" rel="noopener noreferrer">🎮 演示</a>`:''}
             <button class="btn-sm" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">📋 复制开工提示词</button>
           </div>
         </div>
@@ -687,11 +719,11 @@ function renderRecommendations() {
 function renderStars() {
   document.getElementById('starsGrid').innerHTML = STARS.map(s => `
     <div class="star-card">
-      <div class="star-rank">#${s.rank} <span style="color:var(--star)">${s.stars}</span></div>
-      <h3>${s.name}</h3>
-      <p>${s.desc}</p>
-      <div class="rec-tags">${s.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('')}</div>
-      <a class="btn-sm" href="${s.url}" target="_blank" style="margin-top:10px;display:inline-flex">🔗 GitHub</a>
+      <div class="star-rank">#${escapeHtml(s.rank)} <span style="color:var(--star)">${escapeHtml(s.stars)}</span></div>
+      <h3>${escapeHtml(s.name)}</h3>
+      <p>${escapeHtml(s.desc)}</p>
+      <div class="rec-tags">${s.tags.map(t=>`<span class="rec-tag">${escapeHtml(t)}</span>`).join('')}</div>
+      <a class="btn-sm" href="${safeExternalUrl(s.url)}" target="_blank" rel="noopener noreferrer" style="margin-top:10px;display:inline-flex">🔗 GitHub</a>
     </div>
   `).join('');
 }
@@ -731,7 +763,7 @@ function renderBoard() {
     return;
   }
   grid.innerHTML = items.map(p => `
-    <div class="proj-card" onclick="openDetail(JSON.parse(this.dataset.p))" style="cursor:pointer" data-p='${JSON.stringify(p).replace(/'/g,"&#39;")}'>
+    <div class="proj-card" onclick="openDetail(JSON.parse(decodeURIComponent(this.dataset.p)))" style="cursor:pointer" data-p="${encodeURIComponent(JSON.stringify(p))}">
       <div class="proj-head">
         <span class="proj-num">#${typeof p.id==='string'?p.id.slice(1):p.id}</span>
         <span class="rec-track ${tc[p.track]}">${tn[p.track]}</span>
@@ -741,10 +773,10 @@ function renderBoard() {
       <p>${highlightText(p.desc, q)}</p>
       <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${highlightText(t, q)}</span>`).join('')}</div>
       <div class="proj-bottom">
-        <span class="proj-score">${p.stars?p.stars:'⭐ '+p.score+' · MVP '+p.mvp}</span>
+        <span class="proj-score">${escapeHtml(p.stars || '⭐ ' + p.score + ' · MVP ' + p.mvp)}</span>
         <div class="proj-links" onclick="event.stopPropagation()">
-          ${p.source&&p.source.includes('github.com')?`<a class="proj-link" href="${p.source}" target="_blank">源码</a>`:''}
-          ${p.demo?`<a class="proj-link" href="${p.demo}" target="_blank">演示</a>`:''}
+          ${p.source&&p.source.includes('github.com')?`<a class="proj-link" href="${safeExternalUrl(p.source)}" target="_blank" rel="noopener noreferrer">源码</a>`:''}
+          ${p.demo?`<a class="proj-link" href="${safeExternalUrl(p.demo)}" target="_blank" rel="noopener noreferrer">演示</a>`:''}
           ${p.track!=='star'?`<button class="proj-link" onclick="copyPrompt('${p.name.replace(/'/g,"\\'")}')">开工提示词</button>`:''}
         </div>
       </div>
@@ -817,15 +849,15 @@ function openDetail(p) {
   document.getElementById('detailTitle').textContent = p.name;
   document.getElementById('detailDesc').textContent = p.desc;
   document.getElementById('detailMeta').innerHTML = `
-    <span class="meta-item">⭐ ${p.score} 分</span>
-    <span class="meta-item">⏱ MVP ${p.mvp}</span>
-    <span class="meta-item">${tn[p.track]||p.track}</span>
+    <span class="meta-item">⭐ ${escapeHtml(p.score)} 分</span>
+    <span class="meta-item">⏱ MVP ${escapeHtml(p.mvp)}</span>
+    <span class="meta-item">${escapeHtml(tn[p.track]||p.track)}</span>
   `;
-  document.getElementById('detailTags').innerHTML = p.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('');
+  document.getElementById('detailTags').innerHTML = p.tags.map(t=>`<span class="rec-tag">${escapeHtml(t)}</span>`).join('');
   document.getElementById('detailPrompt').value = `我想做一个叫"${p.name}"的 Vibe Coding 项目。请帮我：\n1. 分析这个项目的核心功能\n2. 选择合适的技术栈\n3. 制定 MVP 开发计划\n4. 给出开工的第一步`;
   let actions = `<button class="btn-sm" onclick="copyEditedPrompt()">📋 复制提示词</button>`;
-  if (p.source) actions += `<a class="btn-sm" href="${p.source}" target="_blank">📦 源码</a>`;
-  if (p.demo) actions += `<a class="btn-sm" href="${p.demo}" target="_blank">🎮 演示</a>`;
+  if (p.source) actions += `<a class="btn-sm" href="${safeExternalUrl(p.source)}" target="_blank" rel="noopener noreferrer">📦 源码</a>`;
+  if (p.demo) actions += `<a class="btn-sm" href="${safeExternalUrl(p.demo)}" target="_blank" rel="noopener noreferrer">🎮 演示</a>`;
   document.getElementById('detailActions').innerHTML = actions;
   document.getElementById('detailOverlay').classList.add('open');
   document.getElementById('detailPanel').classList.add('open');

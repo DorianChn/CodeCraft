@@ -20,3 +20,8 @@ jobs:
         run: python -c "import json; json.load(open('manifest.json', encoding='utf-8'))"
       - name: Validate entrypoint
         run: python -c "from pathlib import Path; text=Path('index.html').read_text(encoding='utf-8'); assert '<html' in text.lower() and 'const STARS = [' in text"
+      - name: Validate embedded JavaScript
+        run: >-
+          node -e "const fs=require('fs'),vm=require('vm'); const html=fs.readFileSync('index.html','utf8');
+          const scripts=html.split('<script').slice(1).map(block=>block.slice(block.indexOf('>')+1).split('</script>')[0]);
+          if(!scripts.length) throw new Error('no script block'); for(const source of scripts) new vm.Script(source);"
