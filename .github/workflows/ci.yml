@@ -16,6 +16,8 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m py_compile scripts/update_stars.py
+      - name: Test star data window and labels
+        run: python scripts/test_update_stars.py -v
       - name: Validate PWA metadata
         run: python -c "import json; json.load(open('manifest.json', encoding='utf-8'))"
       - name: Validate entrypoint
